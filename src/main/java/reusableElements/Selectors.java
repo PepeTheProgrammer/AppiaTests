@@ -8,7 +8,9 @@ public class Selectors
 
 	public static final By FILES_TAB = By.cssSelector("div[role=tab][aria-label=Files]");
 
-	public static final By TILES = By.className("simpleTile");
+	public static final By TILES = By.cssSelector("div[class^='simpleTile']");
+
+	public static final By TILE_OVER = By.cssSelector("div[class^='simpleTileOver']");
 
 	public static final By BUTTONS = By.className("imgButton");
 

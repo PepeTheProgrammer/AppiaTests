@@ -101,16 +101,19 @@ public class UserActions
 		// WebElement element = driver.findElement(Selectors.dirNameInput);
 		Actions action = new Actions(driver);
 		action.sendKeys(this.testName).perform();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		action.sendKeys(Keys.ENTER).perform();
+		Thread.sleep(3000);
 		return this;
 	}
 
 	public UserActions openDir(WebDriver driver) throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		Actions actions = new Actions(driver);
 		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
+		if(testdir==null){
+			testdir = NestedElements.getNestedElementByText(driver, Selectors.TILE_OVER, "Testdir");
+		}
 		Thread.sleep(3000);
 		wait.until(ExpectedConditions.visibilityOf(testdir));
 		testdir.click();
@@ -148,18 +151,6 @@ public class UserActions
 		return action;
 	}
 
-	private WebElement findElementByName(WebDriver driver, By selector, String name)
-	{
-		List<WebElement> elements = driver.findElements(selector);
-		for (WebElement el : elements)
-		{
-			if (el.getText().equals(name))
-			{
-				return el;
-			}
-		}
-		return null;
-	}
 
 	public void deleteTestDir(WebDriver driver) throws InterruptedException
 	{
@@ -171,9 +162,10 @@ public class UserActions
 		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
 		actions.contextClick(testdir).perform();
 		Thread.sleep(2000);
-		pushKey(actions, Keys.ARROW_DOWN, 6).sendKeys(Keys.ENTER).build().perform();
+		pushKey(actions, Keys.ARROW_DOWN, 8).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000);
 		clickYesButton(driver);
+		Thread.sleep(5000);
 	}
 
 	public void clickYesButton(WebDriver driver)

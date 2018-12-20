@@ -12,9 +12,9 @@ public class NestedElements {
 
     public static WebElement getNestedElementByText(WebDriver driver, By motherElementSelector, String text){
         List<WebElement> children = driver.findElements(motherElementSelector);
-        for (WebElement element: children) {
-            if(element.getText().contains(text)) {
-                return element;
+        for (WebElement child: children) {
+            if(child.getText().contains(text)) {
+                return child;
             }
         }
         return null;
