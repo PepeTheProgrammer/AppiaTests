@@ -9,8 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import reusableElements.NestedElements;
+import reusableElements.Selectors;
+import reusableElements.WindowButtons;
 
 public class UserActions
 {
@@ -107,10 +109,11 @@ public class UserActions
 	public UserActions openDir(WebDriver driver) throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
+		Actions actions = new Actions(driver);
+		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
 		Thread.sleep(3000);
-		wait.until(ExpectedConditions.visibilityOf(driver.findElement(Selectors.testDir)));
-		WebElement testDir = driver.findElement(Selectors.testDir);
-		testDir.click();
+		wait.until(ExpectedConditions.visibilityOf(testdir));
+		testdir.click();
 		Thread.sleep(5000);
 		return this;
 	}
@@ -158,27 +161,17 @@ public class UserActions
 		return null;
 	}
 
-	private void clickWindowButton(WebDriver driver, int fromLeft) throws InterruptedException
-	{
-		List<WebElement> buttons = driver.findElement(Selectors.windowHeader).findElements(Selectors.imgButton);
-		buttons.get(fromLeft - 1).click();
-		Thread.sleep(3000);
-	}
-
 	public void deleteTestDir(WebDriver driver) throws InterruptedException
 	{
-		WebElement closeButton = driver.findElement(Selectors.CLOSE_BUTTON);
-		closeButton.click();
+		Actions actions = new Actions(driver);
+		getWindowButton(driver, WindowButtons.CLOSE).click();
 		Thread.sleep(2000);
 		clickFiles(driver);
 		Thread.sleep(2000);
-		WebElement element = driver.findElement(Selectors.testDir);
-		Actions action = new Actions(driver);
-		action.moveToElement(element).build().perform();
+		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
+		actions.contextClick(testdir).perform();
 		Thread.sleep(2000);
-		action.contextClick().build().perform();
-		Thread.sleep(2000);
-		pushKey(action, Keys.ARROW_DOWN, 6).sendKeys(Keys.ENTER).build().perform();
+		pushKey(actions, Keys.ARROW_DOWN, 6).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000);
 		clickYesButton(driver);
 	}
@@ -207,6 +200,15 @@ public class UserActions
 		wait.until(ExpectedConditions.visibilityOf(driver.findElement(Selectors.companiesFile)));
 		WebElement companiesFile = driver.findElement(Selectors.companiesFile);
 		companiesFile.click();
+	}
+
+	public WebElement getWindowButton(WebDriver driver, WindowButtons windowButton){
+		List<WebElement> buttons = driver.findElements(By.xpath("//div[contains(@role, 'button') and contains(@onscroll, '" + windowButton.getValue() + "')]"));
+		for (WebElement button: buttons) {
+			if(button.isDisplayed())
+				return button;
+		}
+		return null;
 	}
 
 }

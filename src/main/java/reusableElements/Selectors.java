@@ -1,4 +1,4 @@
-package importEditSearchTest;
+package reusableElements;
 
 import org.openqa.selenium.By;
 
@@ -7,6 +7,10 @@ public class Selectors
 	public static final By files = By.cssSelector("div[eventproxy=apiaDesktopFilesButton]");
 
 	public static final By FILES_TAB = By.cssSelector("div[role=tab][aria-label=Files]");
+
+	public static final By TILES = By.className("simpleTile");
+
+	public static final By BUTTONS = By.className("imgButton");
 
 	public static final By MAXIMIZE_BUTTON = By.cssSelector("div[eventproxy=isc_FileBrowser_0_maximizeButton]");
 
@@ -46,5 +50,6 @@ public class Selectors
 		return By
 				.xpath("html/body/div[2]/div/div[3]/div[2]/div/div/div[1]/div[1]//div[contains(., '" + tabName + "')]");
 	}
+
 
 }

@@ -3,6 +3,7 @@ package importEditSearchTest;
 
 
 import java.awt.AWTException;
+import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -52,12 +53,6 @@ public class tests
 	public void shouldClickFiles() throws InterruptedException
 	{
 		actions.clickFiles(driver);
-		Thread.sleep(3000);
-		WebElement closeButton = driver.findElement(Selectors.CLOSE_BUTTON);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(closeButton).perform();
-		actions.click(closeButton).perform();
-		//closeButton.click();
 	}
 
 	@Test(priority = 2, enabled = true)
