@@ -22,9 +22,9 @@ public class tests
 	@BeforeClass
 	public void setUp() throws InterruptedException
 	{
-		filePath = "/home/applitopia/workspace/AppiaTests/src/main/resources/demoFiles/finance/COMPANIES.csv";
+		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
 	//	DesiredCapabilities caps = DesiredCapabilities.firefox();
-		System.setProperty("webdriver.gecko.driver", "/home/applitopia/workspace/AppiaTests/src/main/resources/geckodriver");
+		System.setProperty("webdriver.gecko.driver", "geckodriver");
 		FirefoxOptions options = new FirefoxOptions();
 		options.setCapability("marionette", false);
 		driver = new FirefoxDriver(options);

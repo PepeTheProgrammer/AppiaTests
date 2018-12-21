@@ -97,3 +97,10 @@ fabric.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/.attach_pid6199
+/.attach_pid5414
+/.attach_pid5436
+/src/test/results/
+/.attach_pid5046
+/.attach_pid5181
+/.attach_pid6769
