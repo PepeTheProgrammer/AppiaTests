@@ -2,8 +2,8 @@ package reusableElements;
 
 import org.openqa.selenium.By;
 
-public class Selectors
-{
+public class Selectors {
+
 	public static final By files = By.cssSelector("div[eventproxy=apiaDesktopFilesButton]");
 
 	public static final By FILES_TAB = By.cssSelector("div[role=tab][aria-label=Files]");
@@ -45,6 +45,8 @@ public class Selectors
 	public static final By yesButton = By.xpath("//div[contains(@role, 'button') and contains(., 'Yes')]");
 
 	public static final By selectedTile = By.className("tileValueSelectedOver");
+
+	public static final By FILTER_BUTTON = By.className("tileValueSelectedOver");
 
 	public static final By companiesFile = By.xpath("//div[contains(@title, 'COMPANIES')]");
 	public static By getByTabName(String tabName)

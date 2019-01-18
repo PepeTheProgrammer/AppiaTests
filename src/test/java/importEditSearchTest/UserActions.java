@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import reusableElements.DataSearchButtons;
 import reusableElements.NestedElements;
 import reusableElements.Selectors;
 import reusableElements.WindowButtons;
@@ -31,6 +32,14 @@ public class UserActions
 		login.sendKeys(password);
 		login.sendKeys(Keys.ENTER);
 		Thread.sleep(3000);
+		return this;
+	}
+
+	public UserActions appiaLogout(WebDriver driver) throws InterruptedException
+	{
+		driver.findElement(Selectors.LOGIN).click();
+		Thread.sleep(3000);
+		clickYesButton(driver);
 		return this;
 	}
 
@@ -81,7 +90,7 @@ public class UserActions
 	{
 		Actions action = rightClickOnWindow(driver);
 		action.sendKeys(Keys.ARROW_DOWN).perform();
-
+		Thread.sleep(2000);
 		action.sendKeys(Keys.ENTER).perform();
 		Thread.sleep(2000);
 		return this;
@@ -196,6 +205,15 @@ public class UserActions
 
 	public WebElement getWindowButton(WebDriver driver, WindowButtons windowButton){
 		List<WebElement> buttons = driver.findElements(By.xpath("//div[contains(@role, 'button') and contains(@onscroll, '" + windowButton.getValue() + "')]"));
+		for (WebElement button: buttons) {
+			if(button.isDisplayed())
+				return button;
+		}
+		return null;
+	}
+
+	public WebElement getDataSearchButton(WebDriver driver, DataSearchButtons dataSearchButton){
+		List<WebElement> buttons = driver.findElements(By.xpath("//div[contains(@role, 'button') and contains(@aria-label, '" + dataSearchButton.getValue() + "')]"));
 		for (WebElement button: buttons) {
 			if(button.isDisplayed())
 				return button;

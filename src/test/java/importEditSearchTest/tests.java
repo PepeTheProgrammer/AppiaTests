@@ -9,19 +9,20 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import reusableElements.DataSearchButtons;
+import reusableElements.WindowButtons;
 
 import java.awt.*;
 
 
-public class tests
-{
+public class tests {
+
 	private WebDriver driver;
 	private UserActions actions;
 	private String filePath;
 
 	@BeforeClass
-	public void setUp() throws InterruptedException
-	{
+	public void setUp() throws InterruptedException {
 		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
 	//	DesiredCapabilities caps = DesiredCapabilities.firefox();
 		System.setProperty("webdriver.gecko.driver", "geckodriver");
@@ -37,34 +38,38 @@ public class tests
 
 
 	@Test
-	public void shouldReturnApplitopiaTitle()
-	{
+	public void shouldReturnApplitopiaTitle() {
 		String title = driver.getTitle();
 		Assert.assertEquals("Applitopia", title);
 
 	}
 
 	@Test(priority = 1)
-	public void shouldClickFiles() throws InterruptedException
-	{
+	public void shouldClickFiles() throws InterruptedException {
 		actions.clickFiles(driver);
+		Thread.sleep(3000);
+		try {
+			actions.deleteTestDir(driver);
+			Thread.sleep(2000);
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			Thread.sleep(2000);
+			actions.clickFiles(driver);
+		}catch(Exception e){
+		}
 	}
 
 	@Test(priority = 2, enabled = true)
-	public void shouldRightClickOnTabSetContainer() throws InterruptedException
-	{
+	public void shouldRightClickOnTabSetContainer() throws InterruptedException {
 		actions.rightClickAdd(driver);
 	}
 
 	@Test(priority = 3, dependsOnMethods = { "shouldRightClickOnTabSetContainer" }, enabled = true)
-	public void shouldCreateDirectory() throws InterruptedException
-	{
+	public void shouldCreateDirectory() throws InterruptedException {
 		actions.chooseDir(driver);
 	}
 
 	@Test(priority = 4, dependsOnMethods = { "shouldCreateDirectory" }, enabled = true)
-	public void shouldEnterDirName() throws InterruptedException
-	{
+	public void shouldEnterDirName() throws InterruptedException {
 		actions.nameDir(driver);
 	}
 
@@ -75,38 +80,57 @@ public class tests
 	}
 
 	@Test(priority = 6, dependsOnMethods = { "shouldClickTestDir" }, enabled = true)
-	public void shouldRightClickUpload() throws InterruptedException
-	{
+	public void shouldRightClickUpload() throws InterruptedException {
 		actions.rightClickUpload(driver);
 	}
 
 	@Test(priority = 7, dependsOnMethods = { "shouldRightClickUpload" }, enabled = true)
-	public void shouldUploadFile() throws InterruptedException, AWTException
-	{
+	public void shouldUploadFile() throws InterruptedException, AWTException {
 		actions.uploadFiles(driver, filePath);
 	}
 
 	@Test(priority = 8, dependsOnMethods = { "shouldUploadFile" }, enabled = true)
-	public void shouldClickOnTestDirTab() throws InterruptedException
-	{
+	public void shouldClickOnTestDirTab() throws InterruptedException {
 		actions.clickOnTestDirTab(driver);
+		Thread.sleep(30000);
 	}
 
 	@Test(priority = 9, dependsOnMethods = { "shouldClickOnTestDirTab" }, enabled = true)
-	public void shouldOpenCompaniesFile() throws InterruptedException
-	{
+	public void shouldOpenCompaniesFile() throws InterruptedException {
+		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		Thread.sleep(2000);
+		actions.clickFiles(driver);
+		Thread.sleep(2000);
+		actions.openDir(driver);
+		Thread.sleep(2000);
 		actions.clickOnCompaniesFile(driver);
 	}
 
-	@Test(priority = 15, dependsOnMethods = { "shouldEnterDirName" }, enabled = true)
+	@Test(priority = 10, dependsOnMethods = {"shouldOpenCompaniesFile"})
+	public void shouldClickFilterButton() throws InterruptedException {
+		actions.getDataSearchButton(driver, DataSearchButtons.FILTER).click();
+		Thread.sleep(3000);
+	}
+
+/*	@Test(priority = 15, dependsOnMethods = { "shouldEnterDirName" }, enabled = true)
 	public void deleteTestDir() throws InterruptedException
 	{
 		actions.deleteTestDir(driver);
+		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		Thread.sleep(8000);
 	}
-
+*/
 	@AfterClass
 	public void closeDriver() throws InterruptedException
 	{
+		try{
+			actions.deleteTestDir(driver);
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			Thread.sleep(8000);
+		}catch (Exception e){}
+
+		actions.appiaLogout(driver);
+		Thread.sleep(2000);
 		driver.close();
 	}
 
