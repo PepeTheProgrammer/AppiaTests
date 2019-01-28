@@ -19,4 +19,7 @@ public class NestedElements {
         }
         return null;
     }
+    public static List<WebElement> getRecordEditorCells(WebDriver driver){
+        return driver.findElements(By.className("recordEditorCell"));
+    }
 }

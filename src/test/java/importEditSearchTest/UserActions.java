@@ -151,7 +151,7 @@ public class UserActions
 
 	}
 
-	private Actions pushKey(Actions action, Keys key, int nTimes)
+	public Actions pushKey(Actions action, Keys key, int nTimes)
 	{
 		for (int i = 0; i < nTimes; i++)
 		{
