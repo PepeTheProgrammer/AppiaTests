@@ -28,7 +28,7 @@ public class TableCell {
         this.cell = By.xpath("input/@*[starts-with(name(), '"+cellName+"')]");
     }
 
-    public void insertValue(String val) throws NoSuchColumnException {
+    public void insertValue(String val) throws NoSuchColumnException, InterruptedException {
         scrollForCell(cell);
         driver.findElement(cell).sendKeys(val);
     }
@@ -37,19 +37,21 @@ public class TableCell {
         return driver.findElements(cell).size()!=0;
     }
 
-    public void scrollForCell(By cell) throws NoSuchColumnException {
+    public void scrollForCell(By cell) throws NoSuchColumnException, InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        String style = driver.findElement(By.className("hScrollThumb")).getAttribute("style");
+        String style = driver.findElements(By.className("hScrollThumb")).get(1).getAttribute("style");
         String scrollFormerPosition = style.substring(style.indexOf("left"), style.indexOf("px"));
         int scrollPosition =Integer.parseInt(scrollFormerPosition.substring(scrollFormerPosition.indexOf(" ")).trim());
+        System.out.println(driver.findElements(By.className("hScrollThumb")).size());
         while (!isLoaded(cell)){
-            System.out.println(style);
-            js.executeScript("document.getElementsByClassName('hScrollThumb')[0].setAttribute('style', '"+style+"')", "");
+            js.executeScript("document.getElementsByClassName('hScrollThumb')[1].setAttribute('style', '"+style+"')", "");
+            Thread.sleep(2000);
+            System.out.println(scrollPosition);
             if(scrollPosition>810 && !isLoaded(cell)){
                 throw new NoSuchColumnException(cellName);
             }
             scrollPosition = scrollPosition + 60;
-            style = style.replace(scrollFormerPosition, "left: "+scrollPosition);
+            style = style.replace(style.substring(style.indexOf("left"), style.indexOf("px")), "left: "+scrollPosition);
         }
         js.executeScript("arguments[0].scrollIntoView()", driver.findElement(cell));
     }
