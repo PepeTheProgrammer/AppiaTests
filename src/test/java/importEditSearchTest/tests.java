@@ -5,15 +5,15 @@ package importEditSearchTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import reusableElements.DataSearchButtons;
-import reusableElements.NestedElements;
+import reusableElements.tableFilesHandlers.DataSearchButtons;
 import reusableElements.WindowButtons;
+import reusableElements.tableFilesHandlers.TableCell;
+import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 
 import java.awt.*;
 import java.util.List;
@@ -59,15 +59,16 @@ public class tests {
 			Thread.sleep(2000);
 			actions.clickFiles(driver);
 		}catch(Exception e){
-		}*/
+		}
+		*/
 	}
 
 
 /*	@Test(priority = 2, enabled = true)
 	public void shouldRightClickOnTabSetContainer() throws InterruptedException {
 		actions.rightClickAdd(driver);
-	}*/
-/*
+	}
+
 	@Test(priority = 3, dependsOnMethods = { "shouldRightClickOnTabSetContainer" }, enabled = true)
 	public void shouldCreateDirectory() throws InterruptedException {
 		actions.chooseDir(driver);
@@ -78,7 +79,7 @@ public class tests {
 		actions.nameDir(driver);
 	}
 */
-	@Test(priority = 5,/* dependsOnMethods = { "shouldEnterDirName" }, */ enabled = true)
+	@Test(priority = 5, /*dependsOnMethods = { "shouldEnterDirName" }, */ enabled = true)
 	public void shouldClickTestDir() throws InterruptedException
 	{
 		actions.openDir(driver);
@@ -93,14 +94,14 @@ public class tests {
 	public void shouldUploadFile() throws InterruptedException, AWTException {
 		actions.uploadFiles(driver, filePath);
 	}
-
-	@Test(priority = 8, dependsOnMethods = { "shouldUploadFile" }, enabled = true)
+*/
+	@Test(priority = 8/*, dependsOnMethods = { "shouldUploadFile" }*/, enabled = true)
 	public void shouldClickOnTestDirTab() throws InterruptedException {
 		actions.clickOnTestDirTab(driver);
-		Thread.sleep(30000);
+		//Thread.sleep(30000);
 	}
-*/
-	@Test(priority = 9,/* dependsOnMethods = { "shouldClickOnTestDirTab" }, */enabled = true)
+
+	@Test(priority = 9,/* dependsOnMethods = { "shouldClickOnTestDirTab" },*/ enabled = true)
 	public void shouldOpenCompaniesFile() throws InterruptedException {
 		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 		Thread.sleep(2000);
@@ -119,20 +120,19 @@ public class tests {
 	}
 
 	@Test(priority = 11, dependsOnMethods = {"shouldClickFilterButton"}, enabled = true)
-	public void shouldFilterData() throws InterruptedException {
+	public void shouldFilterData() throws InterruptedException, NoSuchColumnException {
 		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-		Actions selActions = new Actions(driver);
-		By cellInput = By.className("textItem");
+		/*By cellInput = By.className("textItem");
 		List<WebElement> numberOfRecords = driver.findElements(By.className("listTable"));
 		List<WebElement> editorCells =  numberOfRecords.get(numberOfRecords.size()-1).findElements(cellInput);
 		System.out.println(editorCells.size());
 		editorCells.get(4).sendKeys("services");
-		List<WebElement> scrolls = driver.findElements(By.className("hScrollThumb"));
-		WebElement scroll = scrolls.get(scrolls.size()-1);
 		JavascriptExecutor js = (JavascriptExecutor)driver;
 		js.executeScript("arguments[0].scrollIntoView()", editorCells.get(8));
 		editorCells.get(8).sendKeys(">4000000");
-		editorCells.get(8).sendKeys(Keys.ENTER);
+		editorCells.get(8).sendKeys(Keys.ENTER);*/
+		TableCell fullTableEmployees = new TableCell(driver, "Full Time Employees");
+		fullTableEmployees.insertValue("30");
 		Thread.sleep(5000);
 		List<WebElement> records = driver.findElements(By.className("windowBody"));
 
@@ -146,8 +146,8 @@ public class tests {
 			actions.deleteTestDir(driver);
 			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 			Thread.sleep(8000);
-		}catch (Exception e){}*/
-
+		}catch (Exception e){}
+*/
 		actions.appiaLogout(driver);
 		Thread.sleep(2000);
 		driver.close();

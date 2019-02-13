@@ -1,4 +1,4 @@
-package reusableElements;
+package reusableElements.tableFilesHandlers;
 
 public enum DataSearchButtons {
     FILTER("Filter");
