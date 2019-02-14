@@ -1,10 +1,10 @@
 package reusableElements.tableFilesHandlers;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
+
+import java.util.List;
 
 public class TableCell {
     private By cell;
@@ -19,41 +19,42 @@ public class TableCell {
         this.driver = driver;
         this.cellName = cellName;
         cellName = cellName.toUpperCase().replace(" ", "_");
-        this.cell = By.xpath("input/@*[starts-with(name(), '"+cellName+"')]");
+        this.cell = By.cssSelector("input[name^='"+cellName+"']");
     }
 
     public void setCellName(String cellName) {
         this.cellName = cellName;
         cellName = cellName.toUpperCase().replace(" ", "_");
-        this.cell = By.xpath("input/@*[starts-with(name(), '"+cellName+"')]");
+        this.cell = By.cssSelector("input[name^='"+cellName+"']");
     }
 
-    public void insertValue(String val) throws NoSuchColumnException, InterruptedException {
+    public TableCell insertValue(String val) throws NoSuchColumnException {
         scrollForCell(cell);
         driver.findElement(cell).sendKeys(val);
+        return this;
     }
 
     private boolean isLoaded(By cell){
         return driver.findElements(cell).size()!=0;
     }
 
-    public void scrollForCell(By cell) throws NoSuchColumnException, InterruptedException {
-        JavascriptExecutor js = (JavascriptExecutor)driver;
-        String style = driver.findElements(By.className("hScrollThumb")).get(1).getAttribute("style");
-        String scrollFormerPosition = style.substring(style.indexOf("left"), style.indexOf("px"));
-        int scrollPosition =Integer.parseInt(scrollFormerPosition.substring(scrollFormerPosition.indexOf(" ")).trim());
-        System.out.println(driver.findElements(By.className("hScrollThumb")).size());
+    public void scrollForCell(By cell) throws NoSuchColumnException {
+        Actions actions = new Actions(driver);
+        WebElement scrollThumb = driver.findElements(By.className("hScrollThumb")).get(1);
+        int i = 0;
         while (!isLoaded(cell)){
-            js.executeScript("document.getElementsByClassName('hScrollThumb')[1].setAttribute('style', '"+style+"')", "");
-            Thread.sleep(2000);
-            System.out.println(scrollPosition);
-            if(scrollPosition>810 && !isLoaded(cell)){
+            actions.clickAndHold(scrollThumb).moveByOffset(50, 0).release().build().perform();
+            i++;
+            if (i>15 && !isLoaded(cell)){
                 throw new NoSuchColumnException(cellName);
             }
-            scrollPosition = scrollPosition + 60;
-            style = style.replace(style.substring(style.indexOf("left"), style.indexOf("px")), "left: "+scrollPosition);
         }
+        JavascriptExecutor js = (JavascriptExecutor)driver;
         js.executeScript("arguments[0].scrollIntoView()", driver.findElement(cell));
+    }
+
+    public void submit(){
+        driver.findElement(cell).sendKeys(Keys.ENTER);
     }
 
 }

@@ -122,21 +122,14 @@ public class tests {
 	@Test(priority = 11, dependsOnMethods = {"shouldClickFilterButton"}, enabled = true)
 	public void shouldFilterData() throws InterruptedException, NoSuchColumnException {
 		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-		/*By cellInput = By.className("textItem");
-		List<WebElement> numberOfRecords = driver.findElements(By.className("listTable"));
-		List<WebElement> editorCells =  numberOfRecords.get(numberOfRecords.size()-1).findElements(cellInput);
-		System.out.println(editorCells.size());
-		editorCells.get(4).sendKeys("services");
-		JavascriptExecutor js = (JavascriptExecutor)driver;
-		js.executeScript("arguments[0].scrollIntoView()", editorCells.get(8));
-		editorCells.get(8).sendKeys(">4000000");
-		editorCells.get(8).sendKeys(Keys.ENTER);*/
-		TableCell fullTableEmployees = new TableCell(driver, "Full Time Employees");
-		fullTableEmployees.insertValue("30");
+		new TableCell(driver, "Company Name").insertValue("app");
+		new TableCell(driver, "Enterprise value").insertValue(">50000");
+		new TableCell(driver, "Price To Book").insertValue(">2").submit();
+
 		Thread.sleep(5000);
 		List<WebElement> records = driver.findElements(By.className("windowBody"));
 
-		AssertJUnit.assertTrue(records.get(1).getText().contains("214 records"));
+		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
 	}
 
 	@AfterClass
