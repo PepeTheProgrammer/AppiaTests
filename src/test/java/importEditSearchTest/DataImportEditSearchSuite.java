@@ -64,12 +64,12 @@ public class DataImportEditSearchSuite {
 		actions.uploadFiles(driver, filePath);
 		actions.clickOnTestDirTab(driver);
 		Thread.sleep(30000);
+        actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+        Thread.sleep(2000);
 	}
 
 	@Test(priority = 1, enabled = true)
 	public void openCompaniesFile() throws InterruptedException {
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-		Thread.sleep(2000);
 		actions.clickFiles(driver);
 		Thread.sleep(2000);
 		actions.openDir(driver);
