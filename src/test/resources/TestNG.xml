@@ -3,7 +3,7 @@
 
     <test name = "Simple HTML-XML test">
         <classes>
-            <class name = "importEditSearchTest.tests" />
+            <class name = "importEditSearchTest.DataImportEditSearchSuite" />
         </classes>
     </test>
 </suite>

@@ -164,8 +164,6 @@ public class UserActions
 	public void deleteTestDir(WebDriver driver) throws InterruptedException
 	{
 		Actions actions = new Actions(driver);
-		getWindowButton(driver, WindowButtons.CLOSE).click();
-		Thread.sleep(2000);
 		clickFiles(driver);
 		Thread.sleep(2000);
 		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
