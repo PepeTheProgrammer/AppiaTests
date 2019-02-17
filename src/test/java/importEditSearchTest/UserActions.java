@@ -1,6 +1,7 @@
 package importEditSearchTest;
 
 import java.awt.AWTException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -10,10 +11,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import reusableElements.tableFilesHandlers.DataSearchButtons;
+import reusableElements.tableFilesHandlers.DataSearchButton;
 import reusableElements.NestedElements;
 import reusableElements.Selectors;
 import reusableElements.WindowButtons;
+import reusableElements.tableFilesHandlers.TableWindowTab;
 
 public class UserActions
 {
@@ -210,13 +212,17 @@ public class UserActions
 		return null;
 	}
 
-	public WebElement getDataSearchButton(WebDriver driver, DataSearchButtons dataSearchButton){
-		List<WebElement> buttons = driver.findElements(By.xpath("//div[contains(@role, 'button') and contains(@aria-label, '" + dataSearchButton.getValue() + "')]"));
-		for (WebElement button: buttons) {
-			if(button.isDisplayed())
-				return button;
-		}
-		return null;
+	public void createTagForTable(WebDriver driver, String tagName, String color) throws InterruptedException {
+		new DataSearchButton(driver, "Add Tag").click();
+		Thread.sleep(2000);
+		driver.findElement(By.name("LABEL")).sendKeys(tagName, Keys.TAB);
+		driver.findElement(By.name("textArea")).sendKeys(Keys.TAB);
+		driver.findElement(By.name("COLOR")).sendKeys(color);
+		Thread.sleep(1000);
+		driver.findElement(By.name("COLOR")).sendKeys(Keys.ENTER);
+
+		Thread.sleep(3000);
+
 	}
 
 }

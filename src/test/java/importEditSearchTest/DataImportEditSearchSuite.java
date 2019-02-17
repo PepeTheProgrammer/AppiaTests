@@ -5,15 +5,17 @@ package importEditSearchTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
-import reusableElements.tableFilesHandlers.DataSearchButtons;
+import reusableElements.tableFilesHandlers.DataSearchButton;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.TableCell;
+import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 
 import java.awt.*;
@@ -41,7 +43,7 @@ public class DataImportEditSearchSuite {
 		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
 	}
 
-	@BeforeClass
+	@BeforeClass(enabled = false)
 	public void createDirectoryAndUploadFile() throws InterruptedException, AWTException {
 		String title = driver.getTitle();
 		Assert.assertEquals("Applitopia", title);
@@ -80,9 +82,9 @@ public class DataImportEditSearchSuite {
 	}
 
 
-	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = true)
+	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = false)
 	public void filterData() throws InterruptedException, NoSuchColumnException {
-		actions.getDataSearchButton(driver, DataSearchButtons.FILTER).click();
+		new DataSearchButton(driver, "Filter").click();
 		Thread.sleep(3000);
 		new TableCell(driver, "Company Name").insertValue("app");
 		new TableCell(driver, "Enterprise value").insertValue(">50000");
@@ -94,18 +96,40 @@ public class DataImportEditSearchSuite {
 		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
 	}
 
+	@Test(priority = 3, enabled = true)
+	public void createTags() throws InterruptedException {
+		new TableWindowTab(driver, "Tags").click();
+		Thread.sleep(2000);
+		actions.createTagForTable(driver, "Buy", "green");
+		Thread.sleep(2000);
+		actions.createTagForTable(driver, "Sell", "red");
+		Thread.sleep(2000);
+		actions.createTagForTable(driver, "Watch", "yellow");
+		Thread.sleep(2000);
+		new DataSearchButton(driver, "Save Tag(s)").click();
+	}
+
+	@Test(priority = 4, dependsOnMethods = {"createTags"}, enabled = true)
+	public void tagFilteredRecords() throws InterruptedException {
+		new TableWindowTab(driver, "Data").click();
+		Thread.sleep(10000);
+	}
+
 	@AfterClass
 	public void closeDriver() throws InterruptedException
 	{
-		try{
+	/*	try{
 			actions.deleteTestDir(driver);
 			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 			Thread.sleep(8000);
-		}catch (Exception e){}
+		}catch (Exception e){
+			e.printStackTrace();
+		}*/
 
 		actions.appiaLogout(driver);
 		Thread.sleep(2000);
 		driver.close();
 	}
+
 
 }
