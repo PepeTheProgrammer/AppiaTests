@@ -4,10 +4,7 @@ import java.awt.AWTException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -212,17 +209,14 @@ public class UserActions
 		return null;
 	}
 
-	public void createTagForTable(WebDriver driver, String tagName, String color) throws InterruptedException {
-		new DataSearchButton(driver, "Add Tag").click();
-		Thread.sleep(2000);
-		driver.findElement(By.name("LABEL")).sendKeys(tagName, Keys.TAB);
-		driver.findElement(By.name("textArea")).sendKeys(Keys.TAB);
-		driver.findElement(By.name("COLOR")).sendKeys(color);
-		Thread.sleep(1000);
-		driver.findElement(By.name("COLOR")).sendKeys(Keys.ENTER);
 
-		Thread.sleep(3000);
-
+	public WebElement markRecords(WebDriver driver, int numberOfRecords) throws InterruptedException {
+		WebElement table = driver.findElements(By.className("listTable")).get(0);
+		table.findElements(By.xpath("//tr[@role='listitem' and @aria-posinset='1']")).get(1).click();
+		WebElement lastRecord = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+numberOfRecords+"']"));
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		js.executeScript("arguments[0].scrollIntoView()", lastRecord);
+		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecord).build().perform();
+		return table;//last record changed after selection, so it must be located again
 	}
-
 }

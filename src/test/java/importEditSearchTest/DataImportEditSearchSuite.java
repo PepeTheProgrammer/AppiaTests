@@ -5,7 +5,6 @@ package importEditSearchTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
@@ -15,6 +14,7 @@ import org.testng.annotations.Test;
 import reusableElements.tableFilesHandlers.DataSearchButton;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.TableCell;
+import reusableElements.tableFilesHandlers.TableTags;
 import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 
@@ -96,23 +96,40 @@ public class DataImportEditSearchSuite {
 		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
 	}
 
-	@Test(priority = 3, enabled = true)
+	@Test(priority = 3, enabled = false)
 	public void createTags() throws InterruptedException {
 		new TableWindowTab(driver, "Tags").click();
 		Thread.sleep(2000);
-		actions.createTagForTable(driver, "Buy", "green");
-		Thread.sleep(2000);
-		actions.createTagForTable(driver, "Sell", "red");
-		Thread.sleep(2000);
-		actions.createTagForTable(driver, "Watch", "yellow");
-		Thread.sleep(2000);
+		TableTags.cleanNumberOfTagsFromTop(driver, 3);
+		TableTags.createTag(driver, "Buy", "green");
+		Thread.sleep(3000);
+		TableTags.createTag(driver, "Sell", "red");
+		Thread.sleep(3000);
+		TableTags.createTag(driver, "Watch", "yellow");
+		Thread.sleep(3000);
 		new DataSearchButton(driver, "Save Tag(s)").click();
 	}
 
-	@Test(priority = 4, dependsOnMethods = {"createTags"}, enabled = true)
-	public void tagFilteredRecords() throws InterruptedException {
+	@Test(priority = 4, /*dependsOnMethods = {"createTags"}, */enabled = true)
+	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException {
 		new TableWindowTab(driver, "Data").click();
-		Thread.sleep(10000);
+		filterData();
+		new TableWindowTab(driver, "Data").click();
+		Thread.sleep(2000);
+		new TableCell(driver, "Attachments").scrollForCell(false);
+		Thread.sleep(1000);
+		new TableWindowTab(driver, "Tags").click();
+		new TableWindowTab(driver, "Data").click();
+		new DataSearchButton(driver, "Edit Record").click();
+		Thread.sleep(500);
+		WebElement table = actions.markRecords(driver, 12);
+		Thread.sleep(500);
+		table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.className("selectItemText")).click();
+		Thread.sleep(1000);
+		TableTags.tagMarkedRecords(driver, "Buy");
+		Thread.sleep(5000);
 	}
 
 	@AfterClass

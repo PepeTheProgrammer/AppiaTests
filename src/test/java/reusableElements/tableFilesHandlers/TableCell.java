@@ -29,7 +29,7 @@ public class TableCell {
     }
 
     public TableCell insertValue(String val) throws NoSuchColumnException {
-        scrollForCell(cell);
+        scrollForCell(true);
         driver.findElement(cell).sendKeys(val);
         return this;
     }
@@ -38,12 +38,17 @@ public class TableCell {
         return driver.findElements(cell).size()!=0;
     }
 
-    public void scrollForCell(By cell) throws NoSuchColumnException {
+    public void scrollForCell(boolean toTheRight) throws NoSuchColumnException {
         Actions actions = new Actions(driver);
-        WebElement scrollThumb = driver.findElements(By.className("hScrollThumb")).get(1);
+        List<WebElement> scrollThumbs = driver.findElements(By.className("hScrollThumb"));
+        WebElement scrollThumb = scrollThumbs.get(scrollThumbs.size()-1);
         int i = 0;
+        int offset= -50;
+        if(toTheRight){
+            offset = 50;
+        }
         while (!isLoaded(cell)){
-            actions.clickAndHold(scrollThumb).moveByOffset(50, 0).release().build().perform();
+            actions.clickAndHold(scrollThumb).moveByOffset(offset, 0).release().build().perform();
             i++;
             if (i>15 && !isLoaded(cell)){
                 throw new NoSuchColumnException(cellName);
