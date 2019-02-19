@@ -95,20 +95,20 @@ public class UserActions
 		return this;
 	}
 
-	public UserActions chooseDir(WebDriver driver) throws InterruptedException
+	public UserActions chooseTypeToAdd(WebDriver driver, String type) throws InterruptedException
 	{
-		WebElement element = driver.findElement(Selectors.directory);
+		WebElement element = driver.findElement(By.xpath("//nobr[text()='"+type+"']"));
 		element.click();
 
 		Thread.sleep(3000);
 		return this;
 	}
 
-	public UserActions nameDir(WebDriver driver) throws InterruptedException
+	public UserActions nameAddedFile(WebDriver driver, String name) throws InterruptedException
 	{
 		// WebElement element = driver.findElement(Selectors.dirNameInput);
 		Actions action = new Actions(driver);
-		action.sendKeys(this.testName).perform();
+		action.sendKeys(name).perform();
 		Thread.sleep(2000);
 		action.sendKeys(Keys.ENTER).perform();
 		Thread.sleep(3000);

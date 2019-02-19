@@ -59,8 +59,8 @@ public class DataImportEditSearchSuite {
 		actions.clickFiles(driver);
 		Thread.sleep(3000);
 		actions.rightClickAdd(driver);
-		actions.chooseDir(driver);
-		actions.nameDir(driver);
+		actions.chooseTypeToAdd(driver, "Directory");
+		actions.nameAddedFile(driver, "Testdir");
 		actions.openDir(driver);
 		actions.rightClickUpload(driver);
 		actions.uploadFiles(driver, filePath);
@@ -90,7 +90,7 @@ public class DataImportEditSearchSuite {
 		new TableCell(driver, "Enterprise value").insertValue(">50000");
 		new TableCell(driver, "Price To Book").insertValue(">2").submit();
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 		List<WebElement> records = driver.findElements(By.className("windowBody"));
 
 		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
@@ -110,29 +110,54 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Save Tag(s)").click();
 	}
 
-	@Test(priority = 4, /*dependsOnMethods = {"createTags"}, */enabled = true)
+	@Test(priority = 4, /*dependsOnMethods = {"createTags"}, */enabled = false)
 	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException {
 		new TableWindowTab(driver, "Data").click();
 		filterData();
 		new TableWindowTab(driver, "Data").click();
-		Thread.sleep(2000);
 		new TableCell(driver, "Attachments").scrollForCell(false);
 		Thread.sleep(1000);
-		new TableWindowTab(driver, "Tags").click();
-		new TableWindowTab(driver, "Data").click();
-		new DataSearchButton(driver, "Edit Record").click();
-		Thread.sleep(500);
 		WebElement table = actions.markRecords(driver, 12);
-		Thread.sleep(500);
-		table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']")).click();
+		WebElement record = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']"));
 		Thread.sleep(2000);
-		driver.findElement(By.className("selectItemText")).click();
-		Thread.sleep(1000);
-		TableTags.tagMarkedRecords(driver, "Buy");
-		Thread.sleep(5000);
+		new DataSearchButton(driver, "Edit Record").click();
+		List<WebElement> cells = record.findElements(By.xpath("//td[contains(@class, 'cellSelected Selected')]"));
+		cells.get(3).click();
+		Thread.sleep(3000);
+		table.findElement(By.xpath("//td[contains(@class, 'comboBoxItemPickerCell')]")).click();
+	//	TableTags.tagMarkedRecords(driver, "Buy");
+	//	Thread.sleep(5000);
+		new DataSearchButton(driver, "Commit").click();
+		new DataSearchButton(driver, "Exit").click();
+	}
+	@Test(priority = 5, enabled = false)
+	public void createSql() throws InterruptedException {
+		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
+		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
+		actions.chooseTypeToAdd(driver, "SQL");
+		driver.findElement(By.xpath("//textarea[contains(@class, 'textItem borderless fontsql')]")).sendKeys(sql);
+		new DataSearchButton(driver, "Execute").click();
+		Thread.sleep(2000);
+		new TableWindowTab(driver, "Data 1").click();
+		Thread.sleep(2000);
+		List<WebElement> records = driver.findElements(By.className("windowBody"));
+
+		AssertJUnit.assertTrue(records.get(3).getText().contains("10 records"));
+		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		Thread.sleep(2000);
 	}
 
-	@AfterClass
+	@Test(priority = 6, enabled = true)
+	public void createForm() throws InterruptedException, NoSuchColumnException {
+		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
+		actions.chooseTypeToAdd(driver, "Form");
+		driver.findElements(By.className("formCell")).get(1).sendKeys("companies");
+		new DataSearchButton(driver, "Save").click();
+		Thread.sleep(2000);
+		new TableCell(driver, "Schema").insertValue("DEMO").submit();
+	}
+
+	@AfterClass(enabled = false)
 	public void closeDriver() throws InterruptedException
 	{
 	/*	try{

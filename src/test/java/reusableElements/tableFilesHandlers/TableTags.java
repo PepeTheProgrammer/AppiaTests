@@ -48,9 +48,11 @@ public class TableTags {
     }
 
     public static void tagMarkedRecords(WebDriver driver, String tagName){
-        List<WebElement> availableTags = driver.findElements(By.xpath("//tr[contains(@id, 'isc_PickListMenu_']"));
+        List<WebElement> availableTags = driver.findElements(By.cssSelector("[id^='isc_PickListMenu_']"));
+        System.out.println(availableTags.size());
         for (WebElement tag:availableTags) {
             if(tag.getText().contains(tagName)){
+                System.out.println("gothere");
                 tag.findElement(By.className("checkboxFalse")).click();
                 return;
             }
