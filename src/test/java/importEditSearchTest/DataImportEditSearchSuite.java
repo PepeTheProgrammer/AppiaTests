@@ -11,11 +11,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
-import reusableElements.tableFilesHandlers.DataSearchButton;
+import reusableElements.tableFilesHandlers.*;
 import reusableElements.WindowButtons;
-import reusableElements.tableFilesHandlers.TableCell;
-import reusableElements.tableFilesHandlers.TableTags;
-import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 
 import java.awt.*;
@@ -70,7 +67,7 @@ public class DataImportEditSearchSuite {
         Thread.sleep(2000);
 	}
 
-	@Test(priority = 1, enabled = true)
+	@Test(priority = 1, enabled = false)
 	public void openCompaniesFile() throws InterruptedException {
 		actions.clickFiles(driver);
 		Thread.sleep(2000);
@@ -117,7 +114,7 @@ public class DataImportEditSearchSuite {
 		new TableWindowTab(driver, "Data").click();
 		new TableCell(driver, "Attachments").scrollForCell(false);
 		Thread.sleep(1000);
-		WebElement table = actions.markRecords(driver, 12);
+		WebElement table = actions.markRecords(driver, 1, 12);
 		WebElement record = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']"));
 		Thread.sleep(2000);
 		new DataSearchButton(driver, "Edit Record").click();
@@ -130,6 +127,7 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Commit").click();
 		new DataSearchButton(driver, "Exit").click();
 	}
+
 	@Test(priority = 5, enabled = false)
 	public void createSql() throws InterruptedException {
 		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
@@ -149,19 +147,44 @@ public class DataImportEditSearchSuite {
 
 	@Test(priority = 6, enabled = true)
 	public void createForm() throws InterruptedException, NoSuchColumnException {
+		try{
+			actions.deleteFileFromTestdir(driver, "Companyform");
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		}catch (Exception e){
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			e.printStackTrace();
+		}
 		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
 		actions.chooseTypeToAdd(driver, "Form");
-		driver.findElements(By.className("formCell")).get(1).sendKeys("companies");
+		driver.findElement(By.cssSelector("input[name='FORM']")).sendKeys("companyForm");
 		new DataSearchButton(driver, "Save").click();
-		Thread.sleep(2000);
+		Thread.sleep(1000);
+		new DataSearchButton(driver, "Table Lookup").click();
+		Thread.sleep(3000);
 		new TableCell(driver, "Schema").insertValue("DEMO").submit();
+		new TableCell(driver, "Primary key").insertValue("RECORD").submit();
+		driver.findElement(By.xpath("//div[text()='Discovered']")).click();
+		Thread.sleep(1000);
+		actions.markRecords(driver, 2, 5);
+		Thread.sleep(1000);
+		List<WebElement> toolstrips = driver.findElements(By.className("toolStrip"));
+		toolstrips.get(toolstrips.size()-1).click();
+		List<WebElement> returnDataButtons = new DataSearchButton(driver, "Return Data").getButtonList();
+		returnDataButtons.get(returnDataButtons.size()-1).click();
+		Thread.sleep(20000);
+		new DataSearchButton(driver, "Save Record").click();
+		Thread.sleep(1000);
+		//List<WebElement> saveRecordButtons = new DataSearchButton(driver, "Save Record").getButtonList();
+		//saveRecordButtons.get(returnDataButtons.size()-1).click();
+		new DataSearchButton(driver, "Create Form").click();
+
 	}
 
 	@AfterClass(enabled = false)
 	public void closeDriver() throws InterruptedException
 	{
 	/*	try{
-			actions.deleteTestDir(driver);
+			actions.deleteFile(driver);
 			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 			Thread.sleep(8000);
 		}catch (Exception e){

@@ -52,7 +52,6 @@ public class TableTags {
         System.out.println(availableTags.size());
         for (WebElement tag:availableTags) {
             if(tag.getText().contains(tagName)){
-                System.out.println("gothere");
                 tag.findElement(By.className("checkboxFalse")).click();
                 return;
             }

@@ -18,6 +18,9 @@ public class DataSearchButton {
         this.buttonSelector = By.xpath("//div[contains(@role, 'button') and @aria-label='" + buttonLabel + "']");
     }
 
+    public List<WebElement> getButtonList(){
+        return driver.findElements(buttonSelector);
+    }
     public void click(){
         List<WebElement> buttons = driver.findElements(buttonSelector);
         for (WebElement button: buttons) {

@@ -174,6 +174,21 @@ public class UserActions
 		Thread.sleep(5000);
 	}
 
+	public void deleteFileFromTestdir(WebDriver driver, String filename) throws InterruptedException {
+		Actions actions = new Actions(driver);
+		clickFiles(driver);
+		Thread.sleep(2000);
+		openDir(driver);
+		Thread.sleep(2000);
+		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, filename);
+		actions.contextClick(testdir).perform();
+		Thread.sleep(2000);
+		pushKey(actions, Keys.ARROW_DOWN, 8).sendKeys(Keys.ENTER).build().perform();
+		Thread.sleep(3000);
+		clickYesButton(driver);
+		Thread.sleep(5000);
+	}
+
 	public void clickYesButton(WebDriver driver)
 	{
 		WebElement element = driver.findElement(Selectors.yesButton);
@@ -210,13 +225,15 @@ public class UserActions
 	}
 
 
-	public WebElement markRecords(WebDriver driver, int numberOfRecords) throws InterruptedException {
+	public WebElement markRecords(WebDriver driver, int firstRecord, int lastRecord) throws InterruptedException {
 		WebElement table = driver.findElements(By.className("listTable")).get(0);
-		table.findElements(By.xpath("//tr[@role='listitem' and @aria-posinset='1']")).get(1).click();
-		WebElement lastRecord = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+numberOfRecords+"']"));
-		JavascriptExecutor js = (JavascriptExecutor)driver;
-		js.executeScript("arguments[0].scrollIntoView()", lastRecord);
-		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecord).build().perform();
+		table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+firstRecord+"']")).click();
+		WebElement lastRecordElement = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+lastRecord+"']"));
+		if(!lastRecordElement.isDisplayed()) {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].scrollIntoView()", lastRecordElement);
+		}
+		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).build().perform();
 		return table;//last record changed after selection, so it must be located again
 	}
 }
