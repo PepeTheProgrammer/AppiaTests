@@ -2,20 +2,19 @@ package importEditSearchTest;
 
 
 
+import dataProviderClasses.ReadExcelFile;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import reusableElements.tableFilesHandlers.*;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -37,7 +36,7 @@ public class DataImportEditSearchSuite {
 		driver.manage().window().maximize();
 		actions = new UserActions();
 		Thread.sleep(6000);
-		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
+	//	actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
 	}
 
 	@BeforeClass(enabled = false)
@@ -67,6 +66,11 @@ public class DataImportEditSearchSuite {
         Thread.sleep(2000);
 	}
 
+	@Test(priority = 0, dataProvider = "credentials")
+	public void testLogin(String login, String password) throws InterruptedException {
+		actions.appiaLogin(driver, login, password);
+		Thread.sleep(2000);
+	}
 	@Test(priority = 1, enabled = false)
 	public void openCompaniesFile() throws InterruptedException {
 		actions.clickFiles(driver);
@@ -174,12 +178,9 @@ public class DataImportEditSearchSuite {
 		Thread.sleep(20000);
 		new DataSearchButton(driver, "Save Record").click();
 		Thread.sleep(1000);
-		//List<WebElement> saveRecordButtons = new DataSearchButton(driver, "Save Record").getButtonList();
-		//saveRecordButtons.get(returnDataButtons.size()-1).click();
 		new DataSearchButton(driver, "Create Form").click();
 
 	}
-
 	@AfterClass(enabled = false)
 	public void closeDriver() throws InterruptedException
 	{
@@ -196,5 +197,20 @@ public class DataImportEditSearchSuite {
 		driver.close();
 	}
 
+
+	@DataProvider(name = "credentials")
+	public Object[][] credentialsData() throws IOException {
+		ReadExcelFile config = new ReadExcelFile("/home/applitopia/Desktop/credentials.xls");
+
+		int rows = config.getRowCount(0);
+
+		Object[][] credentials = new Object[rows][2];
+
+		for (int i = 0; i < rows; i++) {
+			credentials[i][0] = config.getData(0, i, 0);
+			credentials[i][1] = config.getData(0, i, 1);
+		}
+		return credentials;
+	}
 
 }

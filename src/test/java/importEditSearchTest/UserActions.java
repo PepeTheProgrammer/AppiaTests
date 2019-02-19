@@ -25,6 +25,7 @@ public class UserActions
 	{
 		WebElement login = driver.findElement(Selectors.LOGIN);
 		login.click();
+		Thread.sleep(1000);
 		login = driver.findElement(Selectors.usernameInput);
 		login.sendKeys(username);
 		login = driver.findElement(Selectors.passwordInput);
