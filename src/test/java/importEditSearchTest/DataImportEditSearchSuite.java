@@ -6,9 +6,11 @@ import dataProviderClasses.ReadExcelFile;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.*;
+import reusableElements.Selectors;
 import reusableElements.tableFilesHandlers.*;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
@@ -36,10 +38,10 @@ public class DataImportEditSearchSuite {
 		driver.manage().window().maximize();
 		actions = new UserActions();
 		Thread.sleep(6000);
-	//	actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
+		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
 	}
 
-	@BeforeClass(enabled = false)
+	@BeforeClass(enabled = true)
 	public void createDirectoryAndUploadFile() throws InterruptedException, AWTException {
 		String title = driver.getTitle();
 		Assert.assertEquals("Applitopia", title);
@@ -66,12 +68,12 @@ public class DataImportEditSearchSuite {
         Thread.sleep(2000);
 	}
 
-	@Test(priority = 0, dataProvider = "credentials")
+	@Test(priority = 0, dataProvider = "credentials", enabled = true)
 	public void testLogin(String login, String password) throws InterruptedException {
 		actions.appiaLogin(driver, login, password);
 		Thread.sleep(2000);
 	}
-	@Test(priority = 1, enabled = false)
+	@Test(priority = 1, enabled = true)
 	public void openCompaniesFile() throws InterruptedException {
 		actions.clickFiles(driver);
 		Thread.sleep(2000);
@@ -83,7 +85,7 @@ public class DataImportEditSearchSuite {
 	}
 
 
-	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = false)
+	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = true)
 	public void filterData() throws InterruptedException, NoSuchColumnException {
 		new DataSearchButton(driver, "Filter").click();
 		Thread.sleep(3000);
@@ -97,7 +99,7 @@ public class DataImportEditSearchSuite {
 		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
 	}
 
-	@Test(priority = 3, enabled = false)
+	@Test(priority = 3, enabled = true)
 	public void createTags() throws InterruptedException {
 		new TableWindowTab(driver, "Tags").click();
 		Thread.sleep(2000);
@@ -111,41 +113,54 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Save Tag(s)").click();
 	}
 
-	@Test(priority = 4, /*dependsOnMethods = {"createTags"}, */enabled = false)
+	@Test(priority = 4, dependsOnMethods = {"createTags"}, enabled = true)
 	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException {
-		new TableWindowTab(driver, "Data").click();
-		filterData();
 		new TableWindowTab(driver, "Data").click();
 		new TableCell(driver, "Attachments").scrollForCell(false);
 		Thread.sleep(1000);
 		WebElement table = actions.markRecords(driver, 1, 12);
-		WebElement record = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']"));
+		WebElement record = driver.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"' and @aria-setsize='"+12+"']"));
 		Thread.sleep(2000);
 		new DataSearchButton(driver, "Edit Record").click();
 		List<WebElement> cells = record.findElements(By.xpath("//td[contains(@class, 'cellSelected Selected')]"));
 		cells.get(3).click();
 		Thread.sleep(3000);
-		table.findElement(By.xpath("//td[contains(@class, 'comboBoxItemPickerCell')]")).click();
-	//	TableTags.tagMarkedRecords(driver, "Buy");
-	//	Thread.sleep(5000);
+		driver.findElement(By.cssSelector("td[class^='comboBoxItemPickerCell']")).click();
+		TableTags.tagMarkedRecords(driver, "Buy");
+		Thread.sleep(5000);
 		new DataSearchButton(driver, "Commit").click();
+		Thread.sleep(3000);
 		new DataSearchButton(driver, "Exit").click();
+		Thread.sleep(1000);
 	}
 
-	@Test(priority = 5, enabled = false)
+	@Test(priority = 5, enabled = true)
 	public void createSql() throws InterruptedException {
 		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
-		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
-		actions.chooseTypeToAdd(driver, "SQL");
-		driver.findElement(By.xpath("//textarea[contains(@class, 'textItem borderless fontsql')]")).sendKeys(sql);
-		new DataSearchButton(driver, "Execute").click();
-		Thread.sleep(2000);
-		new TableWindowTab(driver, "Data 1").click();
-		Thread.sleep(2000);
-		List<WebElement> records = driver.findElements(By.className("windowBody"));
-
-		AssertJUnit.assertTrue(records.get(3).getText().contains("10 records"));
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		actions.clickFiles(driver);
+		actions.openDir(driver);
+		actions.rightClickAdd(driver);
+		try {
+			actions.chooseTypeToAdd(driver, "SQL");
+			driver.findElement(By.xpath("//textarea[contains(@class, 'textItem borderless fontsql')]")).sendKeys(sql);
+			new DataSearchButton(driver, "Execute").click();
+			Thread.sleep(2000);
+			new TableWindowTab(driver, "Data 1").click();
+			Thread.sleep(2000);
+			List<WebElement> tabsets = driver.findElements(By.className("windowBody"));
+			WebElement records=null;
+			for (WebElement el:tabsets) {
+				if(el.getText().contains("records")){
+					records = el;
+					break;
+				}
+			}
+			AssertJUnit.assertTrue(records.getText().contains("10 records"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}finally {
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		}
 		Thread.sleep(2000);
 	}
 
@@ -153,12 +168,16 @@ public class DataImportEditSearchSuite {
 	public void createForm() throws InterruptedException, NoSuchColumnException {
 		try{
 			actions.deleteFileFromTestdir(driver, "Companyform");
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 		}catch (Exception e){
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 			e.printStackTrace();
+		}finally {
+			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 		}
-		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
+		actions.clickFiles(driver);
+		actions.openDir(driver);
+		Actions selActions = new Actions(driver);
+		actions.rightClickElement(driver, driver.findElement(Selectors.FILES_CONTAINER));
+		actions.pushKey(selActions, Keys.ARROW_DOWN, 4).sendKeys(Keys.ENTER);
 		actions.chooseTypeToAdd(driver, "Form");
 		driver.findElement(By.cssSelector("input[name='FORM']")).sendKeys("companyForm");
 		new DataSearchButton(driver, "Save").click();
@@ -181,7 +200,7 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Create Form").click();
 
 	}
-	@AfterClass(enabled = false)
+	@AfterClass(enabled = true)
 	public void closeDriver() throws InterruptedException
 	{
 	/*	try{

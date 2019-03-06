@@ -51,7 +51,7 @@ public class UserActions
 		return this;
 	}
 
-	private Actions rightClickElement(WebDriver driver, WebElement element)
+	public Actions rightClickElement(WebDriver driver, WebElement element)
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		Actions action = new Actions(driver);
@@ -227,14 +227,23 @@ public class UserActions
 
 
 	public WebElement markRecords(WebDriver driver, int firstRecord, int lastRecord) throws InterruptedException {
-		WebElement table = driver.findElements(By.className("listTable")).get(0);
-		table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+firstRecord+"']")).click();
-		WebElement lastRecordElement = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+lastRecord+"']"));
+		List<WebElement> tables = driver.findElements(By.className("listTable"));
+		WebElement actualTable = null;
+		for (WebElement table:tables) {
+			if(table.getText().length()>2){
+				actualTable = table;
+				break;
+			}
+		}
+		if(firstRecord!=1) {
+			actualTable.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='" + firstRecord + "']")).click();
+		}
+		WebElement lastRecordElement = actualTable.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+lastRecord+"']"));
 		if(!lastRecordElement.isDisplayed()) {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView()", lastRecordElement);
 		}
 		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).build().perform();
-		return table;//last record changed after selection, so it must be located again
+		return actualTable;//last record changed after selection, so it must be located again
 	}
 }

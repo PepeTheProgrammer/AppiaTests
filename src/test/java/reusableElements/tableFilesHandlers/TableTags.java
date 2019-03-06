@@ -29,7 +29,7 @@ public class TableTags {
             new DataSearchButton(driver, "Delete Tag(s)").click();
             Thread.sleep(3000);
             new DataSearchButton(driver, "Save Tag(s)").click();
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         }
     }
     public static void cleanupTags(WebDriver driver, String... tagNames) throws InterruptedException {

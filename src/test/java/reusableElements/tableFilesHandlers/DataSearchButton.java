@@ -24,8 +24,10 @@ public class DataSearchButton {
     public void click(){
         List<WebElement> buttons = driver.findElements(buttonSelector);
         for (WebElement button: buttons) {
-            if(button.isDisplayed())
+            if(button.isDisplayed()) {
                 button.click();
+                return;
+            }
         }
     }
 }

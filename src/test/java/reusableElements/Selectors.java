@@ -20,7 +20,7 @@ public class Selectors {
 
 	public static final By tabSetContainer = By.className("tabSetContainer");
 
-	public static final By FILES_CONTAINER = By.cssSelector("div[eventproxy=isc_HighTabSet_1_paneContainer]");
+	public static final By FILES_CONTAINER = By.cssSelector("div[eventproxy$=_paneContainer]");
 
 	public static final By dirNameInput = By.className("formCell");
 
