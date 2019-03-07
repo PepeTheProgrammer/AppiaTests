@@ -1,11 +1,13 @@
 package reusableElements.tableFilesHandlers;
 
+import importEditSearchTest.UserActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import java.awt.*;
 import java.util.List;
 
 public class TableTags {
@@ -47,12 +49,12 @@ public class TableTags {
         new DataSearchButton(driver, "Save Tag(s)").click();
     }
 
-    public static void tagMarkedRecords(WebDriver driver, String tagName){
+    public static void tagMarkedRecords(WebDriver driver, String tagName) throws AWTException {
         List<WebElement> availableTags = driver.findElements(By.cssSelector("[id^='isc_PickListMenu_']"));
-        System.out.println(availableTags.size());
         for (WebElement tag:availableTags) {
             if(tag.getText().contains(tagName)){
                 tag.findElement(By.className("checkboxFalse")).click();
+                driver.findElement(By.cssSelector("body")).click();
                 return;
             }
         }

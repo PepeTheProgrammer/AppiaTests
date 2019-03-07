@@ -227,8 +227,10 @@ public class UserActions
 
 
 	public WebElement markRecords(WebDriver driver, int firstRecord, int lastRecord) throws InterruptedException {
-		WebElement table = driver.findElements(By.className("listTable")).get(0);
-		table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+firstRecord+"']")).click();
+		WebElement table = getListTableElement(driver);
+		if(firstRecord>1) {
+			table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='" + firstRecord + "']")).click();
+		}
 		WebElement lastRecordElement = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+lastRecord+"']"));
 		if(!lastRecordElement.isDisplayed()) {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -237,4 +239,13 @@ public class UserActions
 		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).build().perform();
 		return table;//last record changed after selection, so it must be located again
 	}
+	 public WebElement getListTableElement(WebDriver driver){
+		List<WebElement> tables = driver.findElements(By.className("listTable"));
+		 for (WebElement t:tables) {
+			 if(t.getText().length()>10){
+			 	return t;
+			 }
+		 }
+		 throw new NoSuchElementException("listTable");
+	 }
 }

@@ -36,7 +36,7 @@ public class DataImportEditSearchSuite {
 		driver.manage().window().maximize();
 		actions = new UserActions();
 		Thread.sleep(6000);
-	//	actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
+		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
 	}
 
 	@BeforeClass(enabled = false)
@@ -66,12 +66,12 @@ public class DataImportEditSearchSuite {
         Thread.sleep(2000);
 	}
 
-	@Test(priority = 0, dataProvider = "credentials")
+	@Test(priority = 0, dataProvider = "credentials", enabled = false)
 	public void testLogin(String login, String password) throws InterruptedException {
 		actions.appiaLogin(driver, login, password);
 		Thread.sleep(2000);
 	}
-	@Test(priority = 1, enabled = false)
+	@Test(priority = 1, enabled = true)
 	public void openCompaniesFile() throws InterruptedException {
 		actions.clickFiles(driver);
 		Thread.sleep(2000);
@@ -83,7 +83,7 @@ public class DataImportEditSearchSuite {
 	}
 
 
-	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = false)
+	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = true)
 	public void filterData() throws InterruptedException, NoSuchColumnException {
 		new DataSearchButton(driver, "Filter").click();
 		Thread.sleep(3000);
@@ -93,11 +93,19 @@ public class DataImportEditSearchSuite {
 
 		Thread.sleep(2000);
 		List<WebElement> records = driver.findElements(By.className("windowBody"));
-
-		AssertJUnit.assertTrue(records.get(1).getText().contains("12 records"));
+		WebElement windowBody = null;
+		for (WebElement record:records) {
+			if (record.getText().length()>5){
+				windowBody = record;
+			}
+		}
+		if(windowBody==null){
+			throw new NoSuchElementException("windowBody");
+		}
+		AssertJUnit.assertTrue(windowBody.getText().contains("12 records"));
 	}
 
-	@Test(priority = 3, enabled = false)
+	@Test(priority = 3, dependsOnMethods = {"openCompaniesFile","filterData"},enabled = true)
 	public void createTags() throws InterruptedException {
 		new TableWindowTab(driver, "Tags").click();
 		Thread.sleep(2000);
@@ -111,28 +119,30 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Save Tag(s)").click();
 	}
 
-	@Test(priority = 4, /*dependsOnMethods = {"createTags"}, */enabled = false)
-	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException {
-		new TableWindowTab(driver, "Data").click();
-		filterData();
+	@Test(priority = 4,dependsOnMethods = {"openCompaniesFile","filterData", "createTags"}, enabled = true)
+	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException, AWTException {
 		new TableWindowTab(driver, "Data").click();
 		new TableCell(driver, "Attachments").scrollForCell(false);
 		Thread.sleep(1000);
-		WebElement table = actions.markRecords(driver, 1, 12);
+		new TableWindowTab(driver, "Data").click();
+		actions.markRecords(driver, 1, 12);
+		WebElement table = actions.getListTableElement(driver);
 		WebElement record = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']"));
 		Thread.sleep(2000);
 		new DataSearchButton(driver, "Edit Record").click();
 		List<WebElement> cells = record.findElements(By.xpath("//td[contains(@class, 'cellSelected Selected')]"));
 		cells.get(3).click();
 		Thread.sleep(3000);
-		table.findElement(By.xpath("//td[contains(@class, 'comboBoxItemPickerCell')]")).click();
-	//	TableTags.tagMarkedRecords(driver, "Buy");
-	//	Thread.sleep(5000);
+		actions.getListTableElement(driver).findElement(By.cssSelector("div[class^='selectItemText']")).click();
+		Thread.sleep(2000);
+		TableTags.tagMarkedRecords(driver, "Buy");
+		Thread.sleep(5000);
 		new DataSearchButton(driver, "Commit").click();
+		Thread.sleep(2000);
 		new DataSearchButton(driver, "Exit").click();
 	}
 
-	@Test(priority = 5, enabled = false)
+	@Test(priority = 5, enabled = true)
 	public void createSql() throws InterruptedException {
 		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
 		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
@@ -181,7 +191,7 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Create Form").click();
 
 	}
-	@AfterClass(enabled = false)
+	@AfterClass(enabled = true)
 	public void closeDriver() throws InterruptedException
 	{
 	/*	try{
