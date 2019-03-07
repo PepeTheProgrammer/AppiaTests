@@ -39,7 +39,7 @@ public class DataImportEditSearchSuite {
 		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
 	}
 
-	@BeforeClass(enabled = false)
+	@BeforeClass(enabled = true)
 	public void createDirectoryAndUploadFile() throws InterruptedException, AWTException {
 		String title = driver.getTitle();
 		Assert.assertEquals("Applitopia", title);
