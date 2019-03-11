@@ -56,8 +56,8 @@ public class UserActions
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		Actions action = new Actions(driver);
 		String dropdown = Keys.chord(Keys.SHIFT, Keys.F10);
-		wait.until(ExpectedConditions.visibilityOf(element));
-		action.sendKeys(element, dropdown).build().perform();
+		//wait.until(ExpectedConditions.visibilityOf(element));
+        action.sendKeys(element, dropdown).build().perform();
 		return action;
 	}
 
@@ -78,7 +78,23 @@ public class UserActions
 	{
 		maximizeWindow(driver);
 		Thread.sleep(4000);
-		WebElement filesTab = driver.findElement(Selectors.FILES_CONTAINER);
+		WebElement filesTab = null;
+		List<WebElement> tabs =  driver.findElements(Selectors.FILES_CONTAINER);
+        List<WebElement> tabsetContainers =  driver.findElements(Selectors.tabSetContainer);
+		for (WebElement el: tabsetContainers) {
+			if(el.getText().length()>8){
+				filesTab = el;
+				break;
+			}
+		}
+		if(filesTab==null){
+			for (WebElement el: tabsetContainers) {
+				if(el.getText().length()>1){
+					filesTab = el;
+					break;
+				}
+			}
+		}
 		Actions action = new Actions(driver);
 		rightClickElement(driver, filesTab);
 		Thread.sleep(3000);

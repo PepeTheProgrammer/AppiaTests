@@ -18,9 +18,9 @@ public class Selectors {
 
 	public static final By CLOSE_BUTTON = By.xpath("//div[contains(@role, 'button') and contains(@onscroll, 'closeButton')]");
 
-	public static final By tabSetContainer = By.className("tabSetContainer");
+	public static final By tabSetContainer = By.cssSelector("div[eventproxy^='isc_FormComponentFileBrowser_36']");
 
-	public static final By FILES_CONTAINER = By.cssSelector("div[eventproxy=isc_HighTabSet_1_paneContainer]");
+	public static final By FILES_CONTAINER = By.cssSelector("div[eventproxy^='isc_HighTabSet_'][eventproxy$='_paneContainer']");
 
 	public static final By dirNameInput = By.className("formCell");
 

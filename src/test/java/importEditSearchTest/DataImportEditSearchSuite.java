@@ -145,7 +145,10 @@ public class DataImportEditSearchSuite {
 	@Test(priority = 5, enabled = true)
 	public void createSql() throws InterruptedException {
 		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
-		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
+		actions.clickFiles(driver);
+		actions.openDir(driver);
+		Thread.sleep(3000);
+		actions.rightClickAdd(driver);
 		actions.chooseTypeToAdd(driver, "SQL");
 		driver.findElement(By.xpath("//textarea[contains(@class, 'textItem borderless fontsql')]")).sendKeys(sql);
 		new DataSearchButton(driver, "Execute").click();
@@ -153,8 +156,14 @@ public class DataImportEditSearchSuite {
 		new TableWindowTab(driver, "Data 1").click();
 		Thread.sleep(2000);
 		List<WebElement> records = driver.findElements(By.className("windowBody"));
-
-		AssertJUnit.assertTrue(records.get(3).getText().contains("10 records"));
+		WebElement result = null;
+		for (WebElement rec:records) {
+			if(rec.getText().contains("records")){
+				result = rec;
+				break;
+			}
+		}
+		AssertJUnit.assertTrue(result.getText().contains("10 records"));
 		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 		Thread.sleep(2000);
 	}
@@ -191,7 +200,7 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Create Form").click();
 
 	}
-	@AfterClass(enabled = true)
+	@AfterClass(enabled = false)
 	public void closeDriver() throws InterruptedException
 	{
 	/*	try{
