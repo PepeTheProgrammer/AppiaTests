@@ -57,7 +57,8 @@ public class UserActions
 		Actions action = new Actions(driver);
 		String dropdown = Keys.chord(Keys.SHIFT, Keys.F10);
 		//wait.until(ExpectedConditions.visibilityOf(element));
-        action.sendKeys(element, dropdown).build().perform();
+        //action.sendKeys(element, dropdown).build().perform();
+		action.contextClick(element).build().perform();
 		return action;
 	}
 
