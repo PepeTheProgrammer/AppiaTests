@@ -165,6 +165,7 @@ public class DataImportEditSearchSuite {
 		}
 		AssertJUnit.assertTrue(result.getText().contains("10 records"));
 		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 		Thread.sleep(2000);
 	}
 
@@ -187,18 +188,19 @@ public class DataImportEditSearchSuite {
 		new TableCell(driver, "Schema").insertValue("DEMO").submit();
 		new TableCell(driver, "Primary key").insertValue("RECORD").submit();
 		driver.findElement(By.xpath("//div[text()='Discovered']")).click();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		actions.markRecords(driver, 2, 5);
 		Thread.sleep(1000);
 		List<WebElement> toolstrips = driver.findElements(By.className("toolStrip"));
 		toolstrips.get(toolstrips.size()-1).click();
 		List<WebElement> returnDataButtons = new DataSearchButton(driver, "Return Data").getButtonList();
 		returnDataButtons.get(returnDataButtons.size()-1).click();
-		Thread.sleep(20000);
+		Thread.sleep(5000);
 		new DataSearchButton(driver, "Save Record").click();
 		Thread.sleep(1000);
 		new DataSearchButton(driver, "Create Form").click();
-
+		Thread.sleep(2000);
+		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
 	}
 	@AfterClass(enabled = false)
 	public void closeDriver() throws InterruptedException

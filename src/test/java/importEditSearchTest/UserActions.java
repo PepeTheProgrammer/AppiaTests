@@ -247,6 +247,7 @@ public class UserActions
 		WebElement table = getListTableElement(driver);
 		if(firstRecord>1) {
 			table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='" + firstRecord + "']")).click();
+			Thread.sleep(1500);
 		}
 		WebElement lastRecordElement = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+lastRecord+"']"));
 		if(!lastRecordElement.isDisplayed()) {
