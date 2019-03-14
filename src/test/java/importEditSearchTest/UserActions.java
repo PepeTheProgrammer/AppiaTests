@@ -254,7 +254,7 @@ public class UserActions
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 			js.executeScript("arguments[0].scrollIntoView()", lastRecordElement);
 		}
-		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).build().perform();
+		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).keyUp(Keys.SHIFT).build().perform();
 		return table;//last record changed after selection, so it must be located again
 	}
 	 public WebElement getListTableElement(WebDriver driver){
