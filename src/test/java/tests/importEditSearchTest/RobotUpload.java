@@ -1,4 +1,4 @@
-package importEditSearchTest;
+package tests.importEditSearchTest;
 
 import java.awt.AWTException;
 import java.awt.Robot;

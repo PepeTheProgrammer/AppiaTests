@@ -1,89 +1,80 @@
-package importEditSearchTest;
+package tests.importEditSearchTest;
 
 
 
-import dataProviderClasses.ReadExcelFile;
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.testng.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.AssertJUnit;
-import org.testng.annotations.*;
-import reusableElements.tableFilesHandlers.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import reusableElements.WindowButtons;
+import reusableElements.tableFilesHandlers.DataSearchButton;
+import reusableElements.tableFilesHandlers.TableCell;
+import reusableElements.tableFilesHandlers.TableTags;
+import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
+import tests.SetUpClass;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 
 
-public class DataImportEditSearchSuite {
+public class DataImportEditSearchTest {
 
 	private WebDriver driver;
 	private UserActions actions;
 	private String filePath;
 
-	@BeforeSuite
-	public void setUp() throws InterruptedException {
+
+	@BeforeClass(enabled = true)
+	public void createDirectoryAndUploadFile() throws InterruptedException {
+		driver = SetUpClass.webDriver();
+		actions = new UserActions(driver);
 		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
-	//	DesiredCapabilities caps = DesiredCapabilities.firefox();
-		System.setProperty("webdriver.gecko.driver", "geckodriver");
-		FirefoxOptions options = new FirefoxOptions();
-		options.setCapability("marionette", false);
-		driver = new FirefoxDriver(options);
-		driver.get("http://127.0.0.1");
-		driver.manage().window().maximize();
-		actions = new UserActions();
-		Thread.sleep(6000);
-		actions.appiaLogin(driver, "Applitopia", "ma5t3rk3y");
+		actions.appiaLogin("Applitopia", "ma5t3rk3y");
 	}
 
-	@BeforeClass(enabled = false)
-	public void createDirectoryAndUploadFile() throws InterruptedException, AWTException {
-		String title = driver.getTitle();
-		Assert.assertEquals("Applitopia", title);
+	@Test(priority = 1, enabled = true)
+	public void createDirAndUploadFile() throws InterruptedException, AWTException {
 		try{
-			actions.deleteTestDir(driver);
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			actions.deleteTestDir();
+			actions.getWindowButton(WindowButtons.CLOSE).click();
 			Thread.sleep(8000);
 		}catch (Exception e){
 			System.out.println("INITIAL CLEANUP ERROR");
 			e.printStackTrace();
 		}
 
-		actions.clickFiles(driver);
+		actions.clickFiles();
 		Thread.sleep(3000);
-		actions.rightClickAdd(driver);
-		actions.chooseTypeToAdd(driver, "Directory");
-		actions.nameAddedFile(driver, "Testdir");
-		actions.openDir(driver);
-		actions.rightClickUpload(driver);
-		actions.uploadFiles(driver, filePath);
-		actions.clickOnTestDirTab(driver);
-		Thread.sleep(30000);
-        actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-        Thread.sleep(2000);
+		actions.rightClickAdd();
+		actions.chooseTypeToAdd("Directory");
+		actions.nameAddedFile("Testdir");
+		actions.openDir();
+		actions.rightClickUpload();
+		actions.uploadFiles(filePath);
+		actions.clickOnTestDirTab();
+		Thread.sleep(35000);
+		actions.getWindowButton(WindowButtons.CLOSE).click();
+		Thread.sleep(3000);
 	}
 
-	@Test(priority = 0, dataProvider = "credentials", enabled = false)
-	public void testLogin(String login, String password) throws InterruptedException {
-		actions.appiaLogin(driver, login, password);
-		Thread.sleep(2000);
-	}
-	@Test(priority = 1, enabled = true)
+	@Test(priority = 2, enabled = true)
 	public void openCompaniesFile() throws InterruptedException {
-		actions.clickFiles(driver);
+		actions.clickFiles();
 		Thread.sleep(2000);
-		actions.openDir(driver);
+		actions.openDir();
 		Thread.sleep(2000);
-		actions.clickOnCompaniesFile(driver);
+		actions.clickOnCompaniesFile();
 		Thread.sleep(3000);
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		actions.getWindowButton(WindowButtons.CLOSE).click();
 	}
 
 
-	@Test(priority = 2, dependsOnMethods = {"openCompaniesFile"}, enabled = true)
+	@Test(priority = 3, dependsOnMethods = {"openCompaniesFile"}, enabled = true)
 	public void filterData() throws InterruptedException, NoSuchColumnException {
 		new DataSearchButton(driver, "Filter").click();
 		Thread.sleep(3000);
@@ -105,7 +96,7 @@ public class DataImportEditSearchSuite {
 		AssertJUnit.assertTrue(windowBody.getText().contains("12 records"));
 	}
 
-	@Test(priority = 3, dependsOnMethods = {"openCompaniesFile","filterData"},enabled = true)
+	@Test(priority = 4, dependsOnMethods = {"openCompaniesFile","filterData"},enabled = true)
 	public void createTags() throws InterruptedException {
 		new TableWindowTab(driver, "Tags").click();
 		Thread.sleep(2000);
@@ -119,13 +110,13 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Save Tag(s)").click();
 	}
 
-	@Test(priority = 4,dependsOnMethods = {"openCompaniesFile","filterData", "createTags"}, enabled = true)
+	@Test(priority = 5,dependsOnMethods = {"openCompaniesFile","filterData", "createTags"}, enabled = true)
 	public void tagFilteredRecords() throws InterruptedException, NoSuchColumnException, AWTException {
 		new TableWindowTab(driver, "Data").click();
 		new TableCell(driver, "Attachments").scrollForCell(false);
 		Thread.sleep(1000);
 		new TableWindowTab(driver, "Data").click();
-		actions.markRecords(driver, 1, 12);
+		actions.markRecords(1, 12);
 		WebElement table = actions.getListTableElement(driver);
 		WebElement record = table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='"+12+"']"));
 		Thread.sleep(2000);
@@ -142,14 +133,14 @@ public class DataImportEditSearchSuite {
 		new DataSearchButton(driver, "Exit").click();
 	}
 
-	@Test(priority = 5, enabled = true)
+	@Test(priority = 6, enabled = true)
 	public void createSql() throws InterruptedException {
 		String sql = "select sector, sum(enterprise_value) sector_value from companies group by sector order by sector_value desc";
-		actions.clickFiles(driver);
-		actions.openDir(driver);
+		actions.clickFiles();
+		actions.openDir();
 		Thread.sleep(3000);
-		actions.rightClickAdd(driver);
-		actions.chooseTypeToAdd(driver, "SQL");
+		actions.rightClickAdd();
+		actions.chooseTypeToAdd("SQL");
 		driver.findElement(By.xpath("//textarea[contains(@class, 'textItem borderless fontsql')]")).sendKeys(sql);
 		new DataSearchButton(driver, "Execute").click();
 		Thread.sleep(2000);
@@ -164,22 +155,22 @@ public class DataImportEditSearchSuite {
 			}
 		}
 		AssertJUnit.assertTrue(result.getText().contains("10 records"));
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		actions.getWindowButton(WindowButtons.CLOSE).click();
+		actions.getWindowButton(WindowButtons.CLOSE).click();
 		Thread.sleep(2000);
 	}
 
-	@Test(priority = 6, enabled = true)
+	@Test(priority = 7, enabled = true)
 	public void createForm() throws InterruptedException, NoSuchColumnException {
 		try{
-			actions.deleteFileFromTestdir(driver, "Companyform");
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			actions.deleteFileFromTestdir("Companyform");
+			actions.getWindowButton(WindowButtons.CLOSE).click();
 		}catch (Exception e){
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+			actions.getWindowButton(WindowButtons.CLOSE).click();
 			e.printStackTrace();
 		}
-		actions.clickFiles(driver).openDir(driver).rightClickAdd(driver);
-		actions.chooseTypeToAdd(driver, "Form");
+		actions.clickFiles().openDir().rightClickAdd();
+		actions.chooseTypeToAdd("Form");
 		driver.findElement(By.cssSelector("input[name='FORM']")).sendKeys("companyForm");
 		new DataSearchButton(driver, "Save").click();
 		Thread.sleep(1000);
@@ -189,7 +180,7 @@ public class DataImportEditSearchSuite {
 		new TableCell(driver, "Primary key").insertValue("RECORD").submit();
 		driver.findElement(By.xpath("//div[text()='Discovered']")).click();
 		Thread.sleep(2000);
-		actions.markRecords(driver, 2, 5);
+		actions.markRecords(2, 5);
 		Thread.sleep(1000);
 		List<WebElement> toolstrips = driver.findElements(By.className("toolStrip"));
 		toolstrips.get(toolstrips.size()-1).click();
@@ -200,38 +191,21 @@ public class DataImportEditSearchSuite {
 		Thread.sleep(1000);
 		new DataSearchButton(driver, "Create Form").click();
 		Thread.sleep(2000);
-		actions.getWindowButton(driver, WindowButtons.CLOSE).click();
+		actions.getWindowButton(WindowButtons.CLOSE).click();
 	}
-	@AfterClass(enabled = false)
+
+	@AfterClass(enabled = true)
 	public void closeDriver() throws InterruptedException
 	{
-	/*	try{
-			actions.deleteFile(driver);
-			actions.getWindowButton(driver, WindowButtons.CLOSE).click();
-			Thread.sleep(8000);
+		try {
+			actions.appiaLogout();
 		}catch (Exception e){
 			e.printStackTrace();
-		}*/
-
-		actions.appiaLogout(driver);
+		}
 		Thread.sleep(2000);
 		driver.close();
 	}
 
 
-	@DataProvider(name = "credentials")
-	public Object[][] credentialsData() throws IOException {
-		ReadExcelFile config = new ReadExcelFile("/home/applitopia/Desktop/credentials.xls");
-
-		int rows = config.getRowCount(0);
-
-		Object[][] credentials = new Object[rows][2];
-
-		for (int i = 0; i < rows; i++) {
-			credentials[i][0] = config.getData(0, i, 0);
-			credentials[i][1] = config.getData(0, i, 1);
-		}
-		return credentials;
-	}
 
 }

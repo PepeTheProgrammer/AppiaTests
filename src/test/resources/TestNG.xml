@@ -1,9 +1,18 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
-<suite name = "Simple HTML-XML Suite">
-
-    <test name = "Simple HTML-XML test">
+<suite name = "Applitopia-Tests" parallel="false">
+    <test name = "SetUp Suite">
         <classes>
-            <class name = "importEditSearchTest.DataImportEditSearchSuite" />
+            <class name="tests.SetUpClass"/>
+        </classes>
+    </test>
+    <test name = "Applitopia-login-test">
+        <classes>
+            <class name = "tests.loginTest.LoginTest" />
+        </classes>
+    </test>
+    <test name = "Data-import-edit-search-test">
+        <classes>
+            <class name = "tests.importEditSearchTest.DataImportEditSearchTest" />
         </classes>
     </test>
 </suite>
