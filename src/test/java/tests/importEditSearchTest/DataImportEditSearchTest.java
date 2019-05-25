@@ -2,6 +2,7 @@ package tests.importEditSearchTest;
 
 
 
+import dataProviderClasses.MethodInvocation;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -19,6 +20,7 @@ import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException
 import tests.SetUpClass;
 
 import java.awt.*;
+import java.lang.reflect.Method;
 import java.util.List;
 
 
@@ -27,6 +29,7 @@ public class DataImportEditSearchTest {
 	private WebDriver driver;
 	private UserActions actions;
 	private String filePath;
+	private MethodInvocation invocation;
 
 
 	@BeforeClass(enabled = true)
@@ -34,6 +37,7 @@ public class DataImportEditSearchTest {
 		driver = SetUpClass.webDriver();
 		actions = new UserActions(driver);
 		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
+		invocation = new MethodInvocation();
 		actions.appiaLogin("Applitopia", "ma5t3rk3y");
 	}
 
@@ -41,8 +45,6 @@ public class DataImportEditSearchTest {
 	public void createDirAndUploadFile() throws InterruptedException, AWTException {
 		try{
 			actions.deleteTestDir();
-			actions.getWindowButton(WindowButtons.CLOSE).click();
-			Thread.sleep(8000);
 		}catch (Exception e){
 			System.out.println("INITIAL CLEANUP ERROR");
 			e.printStackTrace();

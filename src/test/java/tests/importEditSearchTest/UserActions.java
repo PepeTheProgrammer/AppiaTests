@@ -180,15 +180,22 @@ public class UserActions
 	public void deleteTestDir() throws InterruptedException
 	{
 		Actions actions = new Actions(driver);
-		clickFiles();
-		Thread.sleep(2000);
-		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
-		actions.contextClick(testdir).perform();
-		Thread.sleep(2000);
-		pushKey(actions, Keys.ARROW_DOWN, 8).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		clickYesButton();
-		Thread.sleep(5000);
+		try {
+			clickFiles();
+			Thread.sleep(2000);
+			WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
+			actions.contextClick(testdir).perform();
+			Thread.sleep(2000);
+			pushKey(actions, Keys.ARROW_DOWN, 8).sendKeys(Keys.ENTER).build().perform();
+			Thread.sleep(3000);
+			clickYesButton();
+			Thread.sleep(5000);
+			getWindowButton(WindowButtons.CLOSE).click();
+			Thread.sleep(8000);
+		}catch (Exception e){
+			System.out.println("INITIAL CLEANUP ERROR");
+			e.printStackTrace();
+		}
 	}
 
 	public void deleteFileFromTestdir(String filename) throws InterruptedException {
@@ -240,6 +247,10 @@ public class UserActions
 				return button;
 		}
 		return null;
+	}
+
+	public void closeWindow(){
+		getWindowButton(WindowButtons.CLOSE).click();
 	}
 
 

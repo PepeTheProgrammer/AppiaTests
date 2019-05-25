@@ -19,7 +19,7 @@ public class LoginTest {
         driver = SetUpClass.webDriver();
     }
 
-    @Test(dataProvider = "credentials", enabled = true)
+    @Test(dataProvider = "credentials", enabled = false)
     public void testLogin(String login, String password) throws InterruptedException {
         UserActions actions = new UserActions(driver);
         actions.appiaLogin(login, password);
