@@ -3,6 +3,8 @@ package tests.importEditSearchTest;
 
 
 import dataProviderClasses.MethodInvocation;
+import dataProviderClasses.ReadXmlFile;
+import dataProviderClasses.dataObjects.TestStep;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +13,7 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.DataSearchButton;
 import reusableElements.tableFilesHandlers.TableCell;
@@ -19,7 +22,11 @@ import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 import tests.SetUpClass;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -33,7 +40,7 @@ public class DataImportEditSearchTest {
 
 
 	@BeforeClass(enabled = true)
-	public void createDirectoryAndUploadFile() throws InterruptedException {
+	public void setUpAndLogin() throws InterruptedException {
 		driver = SetUpClass.webDriver();
 		actions = new UserActions(driver);
 		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
@@ -43,25 +50,23 @@ public class DataImportEditSearchTest {
 
 	@Test(priority = 1, enabled = true)
 	public void createDirAndUploadFile() throws InterruptedException, AWTException {
-		try{
-			actions.deleteTestDir();
-		}catch (Exception e){
-			System.out.println("INITIAL CLEANUP ERROR");
+		try {
+			for (TestStep step:ReadXmlFile.getStepsList(new File("/home/applitopia/workspace/AppiaTests/src/test/resources/newTest.xml"))) {
+				invocation.callMethod(step.getMethodName(), actions, step.getParams());
+			}
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-
-		actions.clickFiles();
-		Thread.sleep(3000);
-		actions.rightClickAdd();
-		actions.chooseTypeToAdd("Directory");
-		actions.nameAddedFile("Testdir");
-		actions.openDir();
-		actions.rightClickUpload();
-		actions.uploadFiles(filePath);
-		actions.clickOnTestDirTab();
-		Thread.sleep(35000);
-		actions.getWindowButton(WindowButtons.CLOSE).click();
-		Thread.sleep(3000);
 	}
 
 	@Test(priority = 2, enabled = true)

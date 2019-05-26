@@ -277,4 +277,9 @@ public class UserActions
 		 }
 		 throw new NoSuchElementException("listTable");
 	 }
+
+	 public void sleep(long milis) throws InterruptedException {
+		Thread.sleep(milis);
+	 }
+
 }
