@@ -48,7 +48,7 @@ public class ReadXmlFile {
                         Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(i);
                         String paramType = paramElement.getAttribute("type");
                         Class c = Class.forName(paramType);
-                        parameters.add(new MethodParam<>())
+                        parameters.add(new MethodParam<>(c.cast()));
                     }
 
                     stepsList.add(new TestStep(id, methodName, params));

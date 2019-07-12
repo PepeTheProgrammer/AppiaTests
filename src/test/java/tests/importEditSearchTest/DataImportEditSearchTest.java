@@ -13,7 +13,6 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
 import reusableElements.WindowButtons;
 import reusableElements.tableFilesHandlers.DataSearchButton;
 import reusableElements.tableFilesHandlers.TableCell;
@@ -22,12 +21,8 @@ import reusableElements.tableFilesHandlers.TableWindowTab;
 import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 import tests.SetUpClass;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 
@@ -54,17 +49,7 @@ public class DataImportEditSearchTest {
 			for (TestStep step:ReadXmlFile.getStepsList(new File("/home/applitopia/workspace/AppiaTests/src/test/resources/newTest.xml"))) {
 				invocation.callMethod(step.getMethodName(), actions, step.getParams());
 			}
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}

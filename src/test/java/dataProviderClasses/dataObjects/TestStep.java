@@ -35,4 +35,8 @@ public class TestStep {
     public void setParams(String[] params) {
         this.params = params;
     }
+
+    public void execute(){
+
+    }
 }

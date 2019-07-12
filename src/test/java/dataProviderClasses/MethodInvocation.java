@@ -1,10 +1,15 @@
 package dataProviderClasses;
 
+import tests.importEditSearchTest.UserActions;
+
 import java.lang.reflect.InvocationTargetException;
 
 public class MethodInvocation {
 
+
+    //TODO: to tez na statyczna klase
     private Class loadedClass;
+    private static UserActions actions = new UserActions();
 
     public MethodInvocation(String className) {
         try {
@@ -22,7 +27,7 @@ public class MethodInvocation {
         object.getClass().getMethod(methodName).invoke(object);
     }
 
-    public void callMethod(String methodName, Object object, Object ...args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static void callMethod(String methodName, Object ...args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         object.getClass().getMethod(methodName).invoke(object, args);
     }
 

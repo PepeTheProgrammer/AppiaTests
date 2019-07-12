@@ -14,13 +14,13 @@ import reusableElements.WindowButtons;
 public class UserActions
 {
 
-	private WebDriver driver;
+	private static WebDriver driver;
 
 	public UserActions(WebDriver driver) {
 		this.driver = driver;
 	}
 
-	public UserActions appiaLogin(String username, String password) throws InterruptedException
+	public static void appiaLogin(String username, String password) throws InterruptedException
 	{
 		WebElement login = driver.findElement(Selectors.LOGIN);
 		login.click();
@@ -31,26 +31,23 @@ public class UserActions
 		login.sendKeys(password);
 		login.sendKeys(Keys.ENTER);
 		Thread.sleep(3000);
-		return this;
 	}
 
-	public UserActions appiaLogout() throws InterruptedException
+	public static void appiaLogout() throws InterruptedException
 	{
 		driver.findElement(Selectors.LOGIN).click();
 		Thread.sleep(3000);
 		clickYesButton();
-		return this;
 	}
 
-	public UserActions clickFiles() throws InterruptedException
+	public static void clickFiles() throws InterruptedException
 	{
 		WebElement element = driver.findElement(Selectors.files);
 		element.click();
 		Thread.sleep(4000);
-		return this;
 	}
 
-	private Actions rightClickElement(WebElement element)
+	private static void rightClickElement(WebElement element)
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 20);
 		Actions action = new Actions(driver);
@@ -58,23 +55,23 @@ public class UserActions
 		//wait.until(ExpectedConditions.visibilityOf(element));
         //action.sendKeys(element, dropdown).build().perform();
 		action.contextClick(element).build().perform();
-		return action;
 	}
 
-	private Actions rightClick()
+	private static void rightClick()
 	{
 		Actions actions = new Actions(driver);
 		String dropdown = Keys.chord(Keys.SHIFT, Keys.F10);
 		actions.sendKeys(dropdown);
-		return actions;
 	}
 
-	private void maximizeWindow(){
+	private static void maximizeWindow(){
 		WebElement button = driver.findElement(Selectors.MAXIMIZE_BUTTON);
 		button.click();
 	}
 
-	private Actions rightClickOnWindow() throws InterruptedException
+	//TODO: przerobic na static (zmienic na void metody)
+
+	private static Actions rightClickOnWindow() throws InterruptedException
 	{
 		maximizeWindow();
 		Thread.sleep(4000);
@@ -102,7 +99,7 @@ public class UserActions
 		return action;
 	}
 
-	public UserActions rightClickAdd() throws InterruptedException
+	public static UserActions rightClickAdd() throws InterruptedException
 	{
 		Actions action = rightClickOnWindow();
 		action.sendKeys(Keys.ARROW_DOWN).perform();
@@ -112,7 +109,7 @@ public class UserActions
 		return this;
 	}
 
-	public UserActions chooseTypeToAdd(String type) throws InterruptedException
+	public static UserActions chooseTypeToAdd(String type) throws InterruptedException
 	{
 		WebElement element = driver.findElement(By.xpath("//nobr[text()='"+type+"']"));
 		element.click();
@@ -121,7 +118,7 @@ public class UserActions
 		return this;
 	}
 
-	public UserActions nameAddedFile(String name) throws InterruptedException
+	public static UserActions nameAddedFile(String name) throws InterruptedException
 	{
 		// WebElement element = driver.findElement(Selectors.dirNameInput);
 		Actions action = new Actions(driver);
@@ -132,7 +129,7 @@ public class UserActions
 		return this;
 	}
 
-	public UserActions openDir() throws InterruptedException
+	public static UserActions openDir() throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
@@ -147,7 +144,7 @@ public class UserActions
 	}
 
 
-	public UserActions rightClickUpload() throws InterruptedException
+	public static UserActions rightClickUpload() throws InterruptedException
 	{
 		Actions action = rightClickOnWindow();
 		pushKey(action, Keys.ARROW_DOWN, 4).sendKeys(Keys.ENTER).perform();
@@ -155,7 +152,7 @@ public class UserActions
 		return this;
 	}
 
-	public void uploadFiles(String filePath) throws InterruptedException, AWTException
+	public static void uploadFiles(String filePath) throws InterruptedException, AWTException
 	{
 		WebElement iframe = driver.findElement(Selectors.gwtFrame);
 		driver.switchTo().frame(iframe);
@@ -167,7 +164,7 @@ public class UserActions
 
 	}
 
-	public Actions pushKey(Actions action, Keys key, int nTimes)
+	public static Actions pushKey(Actions action, Keys key, int nTimes)
 	{
 		for (int i = 0; i < nTimes; i++)
 		{
@@ -177,7 +174,7 @@ public class UserActions
 	}
 
 
-	public void deleteTestDir() throws InterruptedException
+	public static void deleteTestDir() throws InterruptedException
 	{
 		Actions actions = new Actions(driver);
 		try {
@@ -198,7 +195,7 @@ public class UserActions
 		}
 	}
 
-	public void deleteFileFromTestdir(String filename) throws InterruptedException {
+	public static void deleteFileFromTestdir(String filename) throws InterruptedException {
 		Actions actions = new Actions(driver);
 		clickFiles();
 		Thread.sleep(2000);
@@ -213,26 +210,26 @@ public class UserActions
 		Thread.sleep(5000);
 	}
 
-	public void clickYesButton()
+	public static void clickYesButton()
 	{
 		WebElement element = driver.findElement(Selectors.yesButton);
 		element.click();
 	}
 
-	private void clickOnTab(String name)
+	private static void clickOnTab(String name)
 	{
 		WebElement tab = driver.findElement(Selectors.getByTabName(name));
 		tab.click();
 	}
 
-	public void clickOnTestDirTab() throws InterruptedException
+	public static void clickOnTestDirTab() throws InterruptedException
 	{
 		String testName = "Testdir";
 		this.clickOnTab(testName);
 		Thread.sleep(2000);
 	}
 
-	public void clickOnCompaniesFile() throws InterruptedException
+	public static void clickOnCompaniesFile() throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOf(driver.findElement(Selectors.companiesFile)));
@@ -240,7 +237,7 @@ public class UserActions
 		companiesFile.click();
 	}
 
-	public WebElement getWindowButton(WindowButtons windowButton){
+	public static WebElement getWindowButton(WindowButtons windowButton){
 		List<WebElement> buttons = driver.findElements(By.xpath("//div[contains(@role, 'button') and contains(@onscroll, '" + windowButton.getValue() + "')]"));
 		for (WebElement button: buttons) {
 			if(button.isDisplayed())
@@ -249,12 +246,12 @@ public class UserActions
 		return null;
 	}
 
-	public void closeWindow(){
+	public static void closeWindow(){
 		getWindowButton(WindowButtons.CLOSE).click();
 	}
 
 
-	public WebElement markRecords(int firstRecord, int lastRecord) throws InterruptedException {
+	public static WebElement markRecords(int firstRecord, int lastRecord) throws InterruptedException {
 		WebElement table = getListTableElement(driver);
 		if(firstRecord>1) {
 			table.findElement(By.xpath("//tr[@role='listitem' and @aria-posinset='" + firstRecord + "']")).click();
@@ -268,7 +265,7 @@ public class UserActions
 		new Actions(driver).keyDown(Keys.SHIFT).click(lastRecordElement).keyUp(Keys.SHIFT).build().perform();
 		return table;//last record changed after selection, so it must be located again
 	}
-	 public WebElement getListTableElement(WebDriver driver){
+	 public static WebElement getListTableElement(WebDriver driver){
 		List<WebElement> tables = driver.findElements(By.className("listTable"));
 		 for (WebElement t:tables) {
 			 if(t.getText().length()>10){
@@ -278,7 +275,7 @@ public class UserActions
 		 throw new NoSuchElementException("listTable");
 	 }
 
-	 public void sleep(long milis) throws InterruptedException {
+	 public static void sleep(long milis) throws InterruptedException {
 		Thread.sleep(milis);
 	 }
 
