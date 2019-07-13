@@ -43,6 +43,7 @@ public class ReadXmlFile {
                     List<TestModel> testsList = new ArrayList<>();
                     Element eElement = (Element) suiteNode;
                     String suiteName = eElement.getAttribute("name");
+                    System.out.println(suiteName);
 
                     NodeList testsNodeList = eElement.getElementsByTagName("test");
 
@@ -53,24 +54,24 @@ public class ReadXmlFile {
                             List<TestStep> stepsList = new ArrayList<>();
                             Element testElement = (Element) testNode;
                             String testName = testElement.getAttribute("name");
-
+                            System.out.println(testName);
                             NodeList stepsNodeList = testElement.getElementsByTagName("step");
 
                             for (int j = 0; j <stepsNodeList.getLength() ; j++) {
 
-                                Node stepNode = testsNodeList.item(j);
+                                Node stepNode = stepsNodeList.item(j);
 
                                 if(stepNode.getNodeType() == Node.ELEMENT_NODE){
 
-                                    Integer id = Integer.parseInt(eElement.getAttribute("id"));
                                     String methodName = eElement.getElementsByTagName("method").item(0).getTextContent();
                                     String[] params = new String[eElement.getElementsByTagName("methodParam").getLength()];
                                     String[] paramTypes = new String[params.length];
                                     for (int k = 0; k < eElement.getElementsByTagName("methodParam").getLength(); k++) {
                                         Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(k);
+                                        params[k] = paramElement.getTextContent();
                                         paramTypes[k] = paramElement.getAttribute("type");
                                     }
-                                    stepsList.add(new TestStep(id, methodName, paramTypes, params));
+                                    stepsList.add(new TestStep(methodName, paramTypes, params));
                                 }
                             }
                          testsList.add(new TestModel(testName, stepsList));

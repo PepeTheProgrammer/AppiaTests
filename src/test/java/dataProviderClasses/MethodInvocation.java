@@ -25,6 +25,12 @@ public class MethodInvocation {
     }
 
     public static void callMethod(String className, String methodName, String[] paramTypeNames, String... StringParams) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+        for (int i = 0; i <paramTypeNames.length ; i++) {
+            System.out.println(paramTypeNames[i]);
+        }
+        for (int i = 0; i <StringParams.length ; i++) {
+            System.out.println(StringParams[i]);
+        }
         Class methodClass = Class.forName(className);
         Class[] paramTypes = new Class[paramTypeNames.length];
         Object[] params = new Object[StringParams.length];

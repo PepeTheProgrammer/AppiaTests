@@ -5,6 +5,7 @@ package tests.importEditSearchTest;
 import dataProviderClasses.MethodInvocation;
 import dataProviderClasses.ReadXmlFile;
 import dataProviderClasses.dataObjects.TestStep;
+import dataProviderClasses.dataObjects.TestSuite;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -34,7 +35,7 @@ public class DataImportEditSearchTest {
 	private MethodInvocation invocation;
 
 
-	@BeforeClass(enabled = true)
+	/*@BeforeClass(enabled = true)
 	public void setUpAndLogin() throws InterruptedException {
 		driver = SetUpClass.webDriver();
 		actions = new UserActions(driver);
@@ -42,12 +43,13 @@ public class DataImportEditSearchTest {
 		invocation = new MethodInvocation();
 		actions.appiaLogin("Applitopia", "ma5t3rk3y");
 	}
-
+*/
 	@Test(priority = 1, enabled = true)
 	public void createDirAndUploadFile() throws InterruptedException, AWTException {
 		try {
-			for (TestStep step:ReadXmlFile.getStepsList(new File("/home/applitopia/workspace/AppiaTests/src/test/resources/newTest.xml"))) {
-				invocation.callMethod(step.getMethodName(), actions, step.getParams());
+			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/home/applitopia/workspace/AppiaTests/src/test/resources/newTest.xml"));
+			for (TestSuite suite: suites) {
+				suite.execute();
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -152,7 +154,7 @@ public class DataImportEditSearchTest {
 		Thread.sleep(2000);
 	}
 
-	@Test(priority = 7, enabled = true)
+/*	@Test(priority = 7, enabled = true)
 	public void createForm() throws InterruptedException, NoSuchColumnException {
 		try{
 			actions.deleteFileFromTestdir("Companyform");
@@ -198,6 +200,6 @@ public class DataImportEditSearchTest {
 		driver.close();
 	}
 
-
+*/
 
 }
