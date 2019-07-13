@@ -1,17 +1,33 @@
 package dataProviderClasses.dataObjects;
 
-public class MethodParam<T> {
-    private T param;
+public class MethodParam {
 
-    public MethodParam(T param) {
-        this.param = param;
+    private Class paramType;
+    private String paramValue;
+
+    public MethodParam(Class paramType ,String paramValue) {
+        this.paramType = paramType;
+        this.paramValue = paramValue;
     }
 
-    public T getParam() {
-        return param;
+    public MethodParam(String paramType, String paramValue) throws ClassNotFoundException {
+        this.paramType = Class.forName(paramType);
+        this.paramValue = paramValue;
     }
 
-    public void setParam(T param) {
-        this.param = param;
+    public String getParamValue() {
+        return paramValue;
+    }
+
+    public void setParamValue(String param) {
+        this.paramValue = param;
+    }
+
+    public Class getParamType() {
+        return paramType;
+    }
+
+    public void setParamType(Class paramType) {
+        this.paramType = paramType;
     }
 }

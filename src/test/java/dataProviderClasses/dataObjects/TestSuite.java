@@ -7,6 +7,11 @@ public class TestSuite {
     private String name;
     private List<TestModel> tests;
 
+    public TestSuite(String name, List<TestModel> tests) {
+        this.name = name;
+        this.tests = tests;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,7 +1,9 @@
 package dataProviderClasses;
 
-import dataProviderClasses.dataObjects.MethodParam;
+import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
+import dataProviderClasses.dataObjects.TestModel;
 import dataProviderClasses.dataObjects.TestStep;
+import dataProviderClasses.dataObjects.TestSuite;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,8 +20,8 @@ import java.util.List;
 
 public class ReadXmlFile {
 
-    public static List<TestStep> getStepsList(File fXmlFile) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException {
-            List<TestStep> stepsList = new ArrayList<>();
+    public static List<TestSuite> readTestSuite(File fXmlFile) throws ParserConfigurationException, IOException, SAXException, WrongNumberArgsException {
+            List<TestSuite> suitesList = new ArrayList<>();
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -30,31 +32,57 @@ public class ReadXmlFile {
 
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
-            NodeList nList = doc.getElementsByTagName("step");
+            NodeList suitesNodeList = doc.getElementsByTagName("Suite");
 
-            for (int temp = 0; temp < nList.getLength(); temp++) {
 
-                Node nNode = nList.item(temp);
+            for (int temp = 0; temp < suitesNodeList.getLength(); temp++) {
 
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Node suiteNode = suitesNodeList.item(temp);
 
-                    Element eElement = (Element) nNode;
+                if (suiteNode.getNodeType() == Node.ELEMENT_NODE) {
+                    List<TestModel> testsList = new ArrayList<>();
+                    Element eElement = (Element) suiteNode;
+                    String suiteName = eElement.getAttribute("name");
 
-                    Integer id = Integer.parseInt(eElement.getAttribute("id"));
-                    String methodName = eElement.getElementsByTagName("method").item(0).getTextContent();
-                    String[] params = new String[eElement.getElementsByTagName("methodParam").getLength()];
-                    List<MethodParam> parameters;
-                    for (int i = 0; i < eElement.getElementsByTagName("methodParam").getLength(); i++) {
-                        Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(i);
-                        String paramType = paramElement.getAttribute("type");
-                        Class c = Class.forName(paramType);
-                        parameters.add(new MethodParam<>(c.cast()));
+                    NodeList testsNodeList = eElement.getElementsByTagName("test");
+
+                    for (int i = 0; i <testsNodeList.getLength() ; i++) {
+                        Node testNode = testsNodeList.item(i);
+
+                        if(testNode.getNodeType() == Node.ELEMENT_NODE) {
+                            List<TestStep> stepsList = new ArrayList<>();
+                            Element testElement = (Element) testNode;
+                            String testName = testElement.getAttribute("name");
+
+                            NodeList stepsNodeList = testElement.getElementsByTagName("step");
+
+                            for (int j = 0; j <stepsNodeList.getLength() ; j++) {
+
+                                Node stepNode = testsNodeList.item(j);
+
+                                if(stepNode.getNodeType() == Node.ELEMENT_NODE){
+
+                                    Integer id = Integer.parseInt(eElement.getAttribute("id"));
+                                    String methodName = eElement.getElementsByTagName("method").item(0).getTextContent();
+                                    String[] params = new String[eElement.getElementsByTagName("methodParam").getLength()];
+                                    String[] paramTypes = new String[params.length];
+                                    for (int k = 0; k < eElement.getElementsByTagName("methodParam").getLength(); k++) {
+                                        Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(k);
+                                        paramTypes[k] = paramElement.getAttribute("type");
+                                    }
+                                    stepsList.add(new TestStep(id, methodName, paramTypes, params));
+                                }
+                            }
+                         testsList.add(new TestModel(testName, stepsList));
+                        }
                     }
 
-                    stepsList.add(new TestStep(id, methodName, params));
+                    suitesList.add(new TestSuite(suiteName, testsList));
                 }
             }
-        return stepsList;
+        return suitesList;
     }
+
+
 
 }
