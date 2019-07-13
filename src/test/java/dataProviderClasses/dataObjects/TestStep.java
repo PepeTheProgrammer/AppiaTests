@@ -1,5 +1,9 @@
 package dataProviderClasses.dataObjects;
 
+import dataProviderClasses.MethodInvocation;
+
+import java.lang.reflect.InvocationTargetException;
+
 public class TestStep {
 
     private Integer stepId;
@@ -37,6 +41,10 @@ public class TestStep {
     }
 
     public void execute(){
-
+        try {
+            MethodInvocation.callMethod(methodName, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

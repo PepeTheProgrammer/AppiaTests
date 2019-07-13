@@ -71,7 +71,7 @@ public class UserActions
 
 	//TODO: przerobic na static (zmienic na void metody)
 
-	private static Actions rightClickOnWindow() throws InterruptedException
+	private static void rightClickOnWindow() throws InterruptedException
 	{
 		maximizeWindow();
 		Thread.sleep(4000);
@@ -96,29 +96,27 @@ public class UserActions
 		rightClickElement(filesTab);
 		Thread.sleep(3000);
 
-		return action;
 	}
 
-	public static UserActions rightClickAdd() throws InterruptedException
+	public static void rightClickAdd() throws InterruptedException
 	{
-		Actions action = rightClickOnWindow();
+		Actions action = new Actions(driver);
+		rightClickOnWindow();
 		action.sendKeys(Keys.ARROW_DOWN).perform();
 		Thread.sleep(2000);
 		action.sendKeys(Keys.ENTER).perform();
 		Thread.sleep(2000);
-		return this;
 	}
 
-	public static UserActions chooseTypeToAdd(String type) throws InterruptedException
+	public static void chooseTypeToAdd(String type) throws InterruptedException
 	{
 		WebElement element = driver.findElement(By.xpath("//nobr[text()='"+type+"']"));
 		element.click();
 
 		Thread.sleep(3000);
-		return this;
 	}
 
-	public static UserActions nameAddedFile(String name) throws InterruptedException
+	public static void nameAddedFile(String name) throws InterruptedException
 	{
 		// WebElement element = driver.findElement(Selectors.dirNameInput);
 		Actions action = new Actions(driver);
@@ -126,10 +124,9 @@ public class UserActions
 		Thread.sleep(2000);
 		action.sendKeys(Keys.ENTER).perform();
 		Thread.sleep(3000);
-		return this;
 	}
 
-	public static UserActions openDir() throws InterruptedException
+	public static void openDir() throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
@@ -140,16 +137,15 @@ public class UserActions
 		wait.until(ExpectedConditions.visibilityOf(testdir));
 		testdir.click();
 		Thread.sleep(5000);
-		return this;
 	}
 
 
-	public static UserActions rightClickUpload() throws InterruptedException
+	public static void rightClickUpload() throws InterruptedException
 	{
-		Actions action = rightClickOnWindow();
+		Actions action = new Actions(driver);
+		rightClickOnWindow();
 		pushKey(action, Keys.ARROW_DOWN, 4).sendKeys(Keys.ENTER).perform();
 		Thread.sleep(3000);
-		return this;
 	}
 
 	public static void uploadFiles(String filePath) throws InterruptedException, AWTException
@@ -225,7 +221,7 @@ public class UserActions
 	public static void clickOnTestDirTab() throws InterruptedException
 	{
 		String testName = "Testdir";
-		this.clickOnTab(testName);
+		clickOnTab(testName);
 		Thread.sleep(2000);
 	}
 

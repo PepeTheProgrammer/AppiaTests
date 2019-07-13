@@ -3,13 +3,13 @@ package dataProviderClasses;
 import tests.importEditSearchTest.UserActions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class MethodInvocation {
 
 
     //TODO: to tez na statyczna klase
     private Class loadedClass;
-    private static UserActions actions = new UserActions();
 
     public MethodInvocation(String className) {
         try {
@@ -23,12 +23,17 @@ public class MethodInvocation {
     public MethodInvocation() {
     }
 
-    public void callMethod(String methodName, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        object.getClass().getMethod(methodName).invoke(object);
+    public static void callMethod(String className, String methodName, List<String> paramTypeNames, Object params) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+        Class methodClass = Class.forName(className);
+        Class[] paramTypes = new Class[paramTypeNames.size()];
+        for (int i = 0; i < paramTypeNames.size(); i++) {
+            paramTypes[i] = Class.forName(paramTypeNames.get(i));
+        }
+        methodClass.getMethod(methodName, paramTypes).invoke(null, params);
     }
 
-    public static void callMethod(String methodName, Object ...args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        object.getClass().getMethod(methodName).invoke(object, args);
+    public static void callMethod(String methodName,Object object, Object ...args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        object.getClass().getMethod(methodName).invoke(args);
     }
 
 
