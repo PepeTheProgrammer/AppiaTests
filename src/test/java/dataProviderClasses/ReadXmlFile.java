@@ -1,6 +1,7 @@
 package dataProviderClasses;
 
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
+import dataProviderClasses.dataObjects.MethodParam;
 import dataProviderClasses.dataObjects.TestModel;
 import dataProviderClasses.dataObjects.TestStep;
 import dataProviderClasses.dataObjects.TestSuite;
@@ -20,14 +21,13 @@ import java.util.List;
 
 public class ReadXmlFile {
 
-    public static List<TestSuite> readTestSuite(File fXmlFile) throws ParserConfigurationException, IOException, SAXException, WrongNumberArgsException {
+    public static List<TestSuite> readTestSuite(File fXmlFile) throws ParserConfigurationException, IOException, SAXException, WrongNumberArgsException, ClassNotFoundException {
             List<TestSuite> suitesList = new ArrayList<>();
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
 
-            //optional, but recommended
-            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+
             doc.getDocumentElement().normalize();
 
             System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
@@ -60,18 +60,20 @@ public class ReadXmlFile {
                             for (int j = 0; j <stepsNodeList.getLength() ; j++) {
 
                                 Node stepNode = stepsNodeList.item(j);
-
                                 if(stepNode.getNodeType() == Node.ELEMENT_NODE){
+                                    Element stepElement = (Element) stepNode;
 
-                                    String methodName = eElement.getElementsByTagName("method").item(0).getTextContent();
-                                    String[] params = new String[eElement.getElementsByTagName("methodParam").getLength()];
+                                    String methodName = stepElement.getElementsByTagName("method").item(0).getTextContent();
+                                    String[] params = new String[stepElement.getElementsByTagName("methodParam").getLength()];
                                     String[] paramTypes = new String[params.length];
-                                    for (int k = 0; k < eElement.getElementsByTagName("methodParam").getLength(); k++) {
+                                    List<MethodParam> parameters = new ArrayList<>();
+                                    for (int k = 0; k < stepElement.getElementsByTagName("methodParam").getLength(); k++) {
                                         Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(k);
-                                        params[k] = paramElement.getTextContent();
-                                        paramTypes[k] = paramElement.getAttribute("type");
+                                        String value = paramElement.getTextContent();
+                                        String type = paramElement.getAttribute("type");
+                                        parameters.add(new MethodParam(type, value));
                                     }
-                                    stepsList.add(new TestStep(methodName, paramTypes, params));
+                                    stepsList.add(new TestStep(methodName, parameters));
                                 }
                             }
                          testsList.add(new TestModel(testName, stepsList));

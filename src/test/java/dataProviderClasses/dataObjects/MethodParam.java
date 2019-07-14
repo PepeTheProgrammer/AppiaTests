@@ -1,5 +1,7 @@
 package dataProviderClasses.dataObjects;
 
+import dataProviderClasses.converters.GenericObjectConverter;
+
 public class MethodParam {
 
     private Class paramType;
@@ -15,11 +17,11 @@ public class MethodParam {
         this.paramValue = paramValue;
     }
 
-    public String getParamValue() {
+    public String getStringParamValue() {
         return paramValue;
     }
 
-    public void setParamValue(String param) {
+    public void setStringParamValue(String param) {
         this.paramValue = param;
     }
 
@@ -29,5 +31,9 @@ public class MethodParam {
 
     public void setParamType(Class paramType) {
         this.paramType = paramType;
+    }
+
+    public <T> T getConvertedParamValue(){
+        return (T)GenericObjectConverter.convert(paramValue, paramType);
     }
 }

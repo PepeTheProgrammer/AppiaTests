@@ -10,11 +10,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import reusableElements.NestedElements;
 import reusableElements.Selectors;
 import reusableElements.WindowButtons;
+import tests.SetUpClass;
 
 public class UserActions
 {
 
-	private static WebDriver driver;
+	private static WebDriver driver = SetUpClass.webDriver();
 
 	public UserActions(WebDriver driver) {
 		this.driver = driver;
@@ -271,7 +272,7 @@ public class UserActions
 		 throw new NoSuchElementException("listTable");
 	 }
 
-	 public static void sleep(long milis) throws InterruptedException {
+	 public static void sleep(Long milis) throws InterruptedException {
 		Thread.sleep(milis);
 	 }
 

@@ -11,7 +11,7 @@ public class SetUpClass {
     private static WebDriver driver;
 
     @BeforeSuite
-    public void setUp() throws InterruptedException {
+    public static void setUp() throws InterruptedException {
         //	DesiredCapabilities caps = DesiredCapabilities.firefox();
         System.setProperty("webdriver.gecko.driver", "geckodriver");
         FirefoxOptions options = new FirefoxOptions();

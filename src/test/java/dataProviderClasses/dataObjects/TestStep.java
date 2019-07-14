@@ -3,20 +3,24 @@ package dataProviderClasses.dataObjects;
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import dataProviderClasses.MethodInvocation;
 
+import java.util.List;
+
 public class TestStep {
 
     private Integer stepId;
     private String methodName;
-    private String[] paramTypes;
-    private String[] params;
+    private List<MethodParam> parameters;
 
     public TestStep(String methodName, String[] paramTypes, String ...params) throws WrongNumberArgsException {
         if(params.length != paramTypes.length){
             throw new WrongNumberArgsException("Number of paramTypes differs from number of parameters");
         }
         this.methodName = methodName;
-        this.paramTypes = paramTypes;
-        this.params = params;
+    }
+
+    public TestStep(String methodName, List<MethodParam> parameters){
+        this.methodName = methodName;
+        this.parameters = parameters;
     }
 
     public Integer getStepId() {
@@ -35,17 +39,21 @@ public class TestStep {
         this.methodName = methodName;
     }
 
-    public String[] getParams() {
-        return params;
+    public List<MethodParam> getParameters() {
+        return parameters;
     }
 
-    public void setParams(String[] params) {
-        this.params = params;
+    public void setParameters(List<MethodParam> parameters) {
+        this.parameters = parameters;
+    }
+
+    public void addParameter(MethodParam param){
+        parameters.add(param);
     }
 
     public void execute(){
         try {
-            MethodInvocation.callMethod("tests.importEditSearchTest.UserActions", methodName, paramTypes, params);
+            MethodInvocation.callMethod("tests.importEditSearchTest.UserActions", methodName, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
