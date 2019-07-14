@@ -184,11 +184,13 @@ public class UserActions
 			Thread.sleep(3000);
 			clickYesButton();
 			Thread.sleep(5000);
-			getWindowButton(WindowButtons.CLOSE).click();
-			Thread.sleep(8000);
+
 		}catch (Exception e){
 			System.out.println("INITIAL CLEANUP ERROR");
 			e.printStackTrace();
+		}finally {
+			getWindowButton(WindowButtons.CLOSE).click();
+			Thread.sleep(8000);
 		}
 	}
 

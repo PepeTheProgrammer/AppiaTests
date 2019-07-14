@@ -36,4 +36,9 @@ public class MethodParam {
     public <T> T getConvertedParamValue(){
         return (T)GenericObjectConverter.convert(paramValue, paramType);
     }
+
+    @Override
+    public String toString() {
+        return "ParamType= "+paramType.toString() + "\n value= "+paramValue;
+    }
 }

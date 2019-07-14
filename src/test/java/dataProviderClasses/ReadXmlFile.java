@@ -40,45 +40,10 @@ public class ReadXmlFile {
                 Node suiteNode = suitesNodeList.item(temp);
 
                 if (suiteNode.getNodeType() == Node.ELEMENT_NODE) {
-                    List<TestModel> testsList = new ArrayList<>();
-                    Element eElement = (Element) suiteNode;
-                    String suiteName = eElement.getAttribute("name");
-                    System.out.println(suiteName);
+                    Element suiteElement = (Element) suiteNode;
 
-                    NodeList testsNodeList = eElement.getElementsByTagName("test");
-
-                    for (int i = 0; i <testsNodeList.getLength() ; i++) {
-                        Node testNode = testsNodeList.item(i);
-
-                        if(testNode.getNodeType() == Node.ELEMENT_NODE) {
-                            List<TestStep> stepsList = new ArrayList<>();
-                            Element testElement = (Element) testNode;
-                            String testName = testElement.getAttribute("name");
-                            System.out.println(testName);
-                            NodeList stepsNodeList = testElement.getElementsByTagName("step");
-
-                            for (int j = 0; j <stepsNodeList.getLength() ; j++) {
-
-                                Node stepNode = stepsNodeList.item(j);
-                                if(stepNode.getNodeType() == Node.ELEMENT_NODE){
-                                    Element stepElement = (Element) stepNode;
-
-                                    String methodName = stepElement.getElementsByTagName("method").item(0).getTextContent();
-                                    String[] params = new String[stepElement.getElementsByTagName("methodParam").getLength()];
-                                    String[] paramTypes = new String[params.length];
-                                    List<MethodParam> parameters = new ArrayList<>();
-                                    for (int k = 0; k < stepElement.getElementsByTagName("methodParam").getLength(); k++) {
-                                        Element paramElement = (Element) eElement.getElementsByTagName("methodParam").item(k);
-                                        String value = paramElement.getTextContent();
-                                        String type = paramElement.getAttribute("type");
-                                        parameters.add(new MethodParam(type, value));
-                                    }
-                                    stepsList.add(new TestStep(methodName, parameters));
-                                }
-                            }
-                         testsList.add(new TestModel(testName, stepsList));
-                        }
-                    }
+                    String suiteName = suiteElement.getAttribute("name");
+                    List<TestModel> testsList = readTestsFromSuite(suiteElement);
 
                     suitesList.add(new TestSuite(suiteName, testsList));
                 }
@@ -86,6 +51,56 @@ public class ReadXmlFile {
         return suitesList;
     }
 
+    private static List<MethodParam> readMethodParamsFromStep(Element stepElement) throws ClassNotFoundException {
+        List<MethodParam> parameters = new ArrayList<>();
 
+        for (int k = 0; k < stepElement.getElementsByTagName("methodParam").getLength(); k++) {
+            Element paramElement = (Element) stepElement.getElementsByTagName("methodParam").item(k);
+            String value = paramElement.getTextContent();
+            String type = paramElement.getAttribute("type");
+            System.out.println(value + "\n" + type);
+            parameters.add(new MethodParam(type, value));
+        }
+        return parameters;
+    }
+
+    private static List<TestStep> readStepsFromTest(Element testElement) throws ClassNotFoundException {
+        List<TestStep> stepsList = new ArrayList<>();
+        NodeList stepsNodeList = testElement.getElementsByTagName("step");
+
+        for (int j = 0; j <stepsNodeList.getLength() ; j++) {
+
+            Node stepNode = stepsNodeList.item(j);
+            if(stepNode.getNodeType() == Node.ELEMENT_NODE){
+                Element stepElement = (Element) stepNode;
+
+                String methodName = stepElement.getElementsByTagName("method").item(0).getTextContent();
+                System.out.println(methodName);
+                List<MethodParam> parameters = readMethodParamsFromStep(stepElement);
+                stepsList.add(new TestStep(methodName, parameters));
+            }
+        }
+        return stepsList;
+    }
+
+    private static List<TestModel> readTestsFromSuite(Element suiteElement) throws ClassNotFoundException {
+        List<TestModel> testsList = new ArrayList<>();
+
+        NodeList testsNodeList = suiteElement.getElementsByTagName("test");
+
+        for (int i = 0; i <testsNodeList.getLength() ; i++) {
+            Node testNode = testsNodeList.item(i);
+
+            if(testNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element testElement = (Element) testNode;
+                String testName = testElement.getAttribute("name");
+
+                List<TestStep> stepsList = readStepsFromTest(testElement);
+
+                testsList.add(new TestModel(testName, stepsList));
+            }
+        }
+        return testsList;
+    }
 
 }

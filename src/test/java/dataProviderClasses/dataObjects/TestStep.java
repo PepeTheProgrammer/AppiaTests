@@ -58,4 +58,9 @@ public class TestStep {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return methodName +"\n"+ parameters;
+    }
 }
