@@ -1,11 +1,15 @@
 package dataProviderClasses.dataObjects;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 public class TestSuite {
 
     private String name;
     private List<TestModel> tests;
+    private List<Result> testsResults;
+    private Result result;
 
     public TestSuite(String name, List<TestModel> tests) {
         this.name = name;
@@ -28,9 +32,17 @@ public class TestSuite {
         this.tests = tests;
     }
 
-    public void execute(){
+    public Result execute() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         for (TestModel test: tests) {
-            test.execute();
+            try {
+                testsResults.add(test.execute());
+            } catch (Exception e){
+                result = new Result(name, false, e);
+            }
         }
+        if(result == null){
+            result = new Result(name, true);
+        }
+        return result;
     }
 }

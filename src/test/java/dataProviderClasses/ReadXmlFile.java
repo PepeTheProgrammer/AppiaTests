@@ -58,7 +58,6 @@ public class ReadXmlFile {
             Element paramElement = (Element) stepElement.getElementsByTagName("methodParam").item(k);
             String value = paramElement.getTextContent();
             String type = paramElement.getAttribute("type");
-            System.out.println(value + "\n" + type);
             parameters.add(new MethodParam(type, value));
         }
         return parameters;
@@ -75,7 +74,6 @@ public class ReadXmlFile {
                 Element stepElement = (Element) stepNode;
 
                 String methodName = stepElement.getElementsByTagName("method").item(0).getTextContent();
-                System.out.println(methodName);
                 List<MethodParam> parameters = readMethodParamsFromStep(stepElement);
                 stepsList.add(new TestStep(methodName, parameters));
             }

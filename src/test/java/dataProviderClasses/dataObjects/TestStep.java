@@ -3,6 +3,7 @@ package dataProviderClasses.dataObjects;
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import dataProviderClasses.MethodInvocation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class TestStep {
@@ -10,6 +11,7 @@ public class TestStep {
     private Integer stepId;
     private String methodName;
     private List<MethodParam> parameters;
+    private Result result;
 
     public TestStep(String methodName, String[] paramTypes, String ...params) throws WrongNumberArgsException {
         if(params.length != paramTypes.length){
@@ -51,11 +53,16 @@ public class TestStep {
         parameters.add(param);
     }
 
-    public void execute(){
+
+    public Result execute() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         try {
             MethodInvocation.callMethod("tests.importEditSearchTest.UserActions", methodName, parameters);
+            result = new Result(methodName, true);
         } catch (Exception e) {
-            e.printStackTrace();
+            result = new Result(methodName, false, e);
+            throw e;
+        }finally{
+            return result;
         }
     }
 
