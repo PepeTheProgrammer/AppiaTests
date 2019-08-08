@@ -1,0 +1,14 @@
+<Suite>
+    <test name ="test">
+        <step>
+            <method>appiaLogin</method>
+            <methodParam type="java.lang.String">applitopia</methodParam>
+            <methodParam type="java.lang.String">ma5t3rk3y</methodParam>
+        </step>
+    </test>
+    <test>
+        <step>
+            <method>appiaLogout</method>
+        </step>
+    </test>
+</Suite>

@@ -48,8 +48,9 @@ public class DataImportEditSearchTest {
 	public void createDirAndUploadFile() throws InterruptedException, AWTException {
 		SetUpClass.setUp();
 		try {
-			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/home/applitopia/workspace/AppiaTests/src/test/resources/newTest.xml"));
+			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/root/IdeaProjects/AppiaTests/src/test/resources/exampleTest.xml"));
 			for (TestSuite suite: suites) {
+				System.out.println(suite);
 				suite.execute();
 			}
 		} catch (Exception e){

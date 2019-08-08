@@ -45,4 +45,14 @@ public class TestSuite {
         }
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "TestSuite{" +
+                "name='" + name + '\'' +
+                ", tests=" + tests +
+                ", testsResults=" + testsResults +
+                ", result=" + result +
+                '}';
+    }
 }
