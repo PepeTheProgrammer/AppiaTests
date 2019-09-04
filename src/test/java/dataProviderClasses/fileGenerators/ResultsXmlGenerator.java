@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -73,8 +74,7 @@ public class ResultsXmlGenerator {
         for (TestSuite suite: suites) {
             builder.append(parseTestSuite(suite));
         }
-        File results = new File("/home/applitopia/IdeaProjects/AppiaTests/src/test/results/result"
-                +new Date()+".xml");
+        File results = new File("/home/applitopia/IdeaProjects/AppiaTests/src/test/results/result.xml");
 
         Document document = convertStringToXMLDocument(builder.toString());
 

@@ -29,40 +29,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DataImportEditSearchTest {
+public class TestRun {
 
 	private WebDriver driver;
 	private UserActions actions;
 	private String filePath;
 	private MethodInvocation invocation;
 
+/**
+ * to run tests from file run the methods as below.
+ */
 
-	/*@BeforeClass(enabled = true)
-	public void setUpAndLogin() throws InterruptedException {
-		driver = SetUpClass.webDriver();
-		actions = new UserActions(driver);
-		filePath = "/home/applitopia/workspace/AppiaTests/src/test/resources/finance/COMPANIES.csv";
-		invocation = new MethodInvocation();
-		actions.appiaLogin("Applitopia", "ma5t3rk3y");
-	}
-*/
 	@Test(priority = 1, enabled = true)
-	public void createDirAndUploadFile() throws InterruptedException, AWTException {
+	public void readTestsFromFile() throws InterruptedException, AWTException {
 		SetUpClass.setUp();
 		try {
 			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/home/applitopia/IdeaProjects/AppiaTests/src/test/resources/exampleTest.xml"));
-			List<TestSuite> finishedSuites = new ArrayList<>();
 			for (TestSuite suite: suites) {
-				System.out.println(suite);
-				finishedSuites.add(suite.execute());
+				suite.execute();
 			}
 			ResultsXmlGenerator generator =new ResultsXmlGenerator();
-			generator.generateResultsXmlFile(finishedSuites);
+			generator.generateResultsXmlFile(suites);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
+	/*  Deprecated - old format selenium tests
 	@Test(priority = 2, enabled = true)
 	public void openCompaniesFile() throws InterruptedException {
 		actions.clickFiles();
