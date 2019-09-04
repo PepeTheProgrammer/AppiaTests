@@ -53,6 +53,10 @@ public class TestStep {
         parameters.add(param);
     }
 
+    public Result getResult() {
+        return result;
+    }
+
 
     public Result execute() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         try {

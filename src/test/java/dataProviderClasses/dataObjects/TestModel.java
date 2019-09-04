@@ -32,6 +32,9 @@ public class TestModel {
         this.steps = steps;
     }
 
+    public Result getResult() {
+        return result;
+    }
 
     public Result execute() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         for (TestStep step: steps) {

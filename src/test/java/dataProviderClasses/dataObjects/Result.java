@@ -3,16 +3,16 @@ package dataProviderClasses.dataObjects;
 public class Result {
     private boolean passed;
     private Exception exception;
-    private String methodName;
+    private String objectName;
 
-    public Result(String methodName, boolean passed, Exception exception) {
+    public Result(String objectName, boolean passed, Exception exception) {
         this.passed = passed;
         this.exception = exception;
-        this.methodName = methodName;
+        this.objectName = objectName;
     }
 
-    public Result(String methodName, boolean passed) {
-        this.methodName = methodName;
+    public Result(String objectName, boolean passed) {
+        this.objectName = objectName;
         this.passed = passed;
     }
 
@@ -32,11 +32,17 @@ public class Result {
         this.exception = exception;
     }
 
-    public String getMethodName() {
-        return methodName;
+    public String getObjectName() {
+        return objectName;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
+
+    public String getResult(){
+        return passed ? "Passed" : "Failed";
+    }
+
+
 }
