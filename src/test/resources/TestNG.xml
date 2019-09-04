@@ -12,7 +12,7 @@
     </test>
     <test name = "Data-import-edit-search-test">
         <classes>
-            <class name = "tests.importEditSearchTest.TestRun" />
+            <class name = "tests.testRun.TestRun" />
         </classes>
     </test>
 </suite>

@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import tests.SetUpClass;
-import tests.importEditSearchTest.UserActions;
+import tests.testRun.UserActions;
 
 import java.io.IOException;
 

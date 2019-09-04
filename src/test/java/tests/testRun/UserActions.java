@@ -1,4 +1,4 @@
-package tests.importEditSearchTest;
+package tests.testRun;
 
 import java.awt.AWTException;
 import java.util.List;

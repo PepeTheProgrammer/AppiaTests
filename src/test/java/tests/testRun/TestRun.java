@@ -1,31 +1,17 @@
-package tests.importEditSearchTest;
+package tests.testRun;
 
 
 
 import dataProviderClasses.MethodInvocation;
 import dataProviderClasses.ReadXmlFile;
-import dataProviderClasses.dataObjects.TestStep;
 import dataProviderClasses.dataObjects.TestSuite;
 import dataProviderClasses.fileGenerators.ResultsXmlGenerator;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.testng.AssertJUnit;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import reusableElements.WindowButtons;
-import reusableElements.tableFilesHandlers.DataSearchButton;
-import reusableElements.tableFilesHandlers.TableCell;
-import reusableElements.tableFilesHandlers.TableTags;
-import reusableElements.tableFilesHandlers.TableWindowTab;
-import reusableElements.tableFilesHandlers.tableExceptions.NoSuchColumnException;
 import tests.SetUpClass;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
