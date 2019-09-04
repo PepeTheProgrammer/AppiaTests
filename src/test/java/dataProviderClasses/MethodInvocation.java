@@ -10,8 +10,6 @@ import java.util.List;
 public class MethodInvocation {
 
 
-    //TODO: to tez na statyczna klase
-
     public MethodInvocation() {
     }
 

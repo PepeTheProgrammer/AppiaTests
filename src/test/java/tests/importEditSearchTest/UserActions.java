@@ -12,8 +12,7 @@ import reusableElements.Selectors;
 import reusableElements.WindowButtons;
 import tests.SetUpClass;
 
-public class UserActions
-{
+public class UserActions {
 
 	private static WebDriver driver = SetUpClass.webDriver();
 
@@ -70,7 +69,7 @@ public class UserActions
 		button.click();
 	}
 
-	//TODO: przerobic na static (zmienic na void metody)
+	//TODO: change all methods to static void
 
 	private static void rightClickOnWindow() throws InterruptedException
 	{
@@ -127,12 +126,12 @@ public class UserActions
 		Thread.sleep(3000);
 	}
 
-	public static void openDir() throws InterruptedException
+	public static void openDir(String dirName) throws InterruptedException
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "Testdir");
+		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, dirName);
 		if(testdir==null){
-			testdir = NestedElements.getNestedElementByText(driver, Selectors.TILE_OVER, "Testdir");
+			testdir = NestedElements.getNestedElementByText(driver, Selectors.TILE_OVER, dirName);
 		}
 		Thread.sleep(3000);
 		wait.until(ExpectedConditions.visibilityOf(testdir));
@@ -140,6 +139,18 @@ public class UserActions
 		Thread.sleep(5000);
 	}
 
+	public static void openDir() throws InterruptedException
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebElement testdir = NestedElements.getNestedElementByText(driver, Selectors.TILES, "testDir");
+		if(testdir==null){
+			testdir = NestedElements.getNestedElementByText(driver, Selectors.TILE_OVER, "testDir");
+		}
+		Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOf(testdir));
+		testdir.click();
+		Thread.sleep(5000);
+	}
 
 	public static void rightClickUpload() throws InterruptedException
 	{

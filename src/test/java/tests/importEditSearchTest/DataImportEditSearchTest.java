@@ -6,6 +6,7 @@ import dataProviderClasses.MethodInvocation;
 import dataProviderClasses.ReadXmlFile;
 import dataProviderClasses.dataObjects.TestStep;
 import dataProviderClasses.dataObjects.TestSuite;
+import dataProviderClasses.fileGenerators.ResultsXmlGenerator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -24,6 +25,7 @@ import tests.SetUpClass;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,11 +50,14 @@ public class DataImportEditSearchTest {
 	public void createDirAndUploadFile() throws InterruptedException, AWTException {
 		SetUpClass.setUp();
 		try {
-			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/root/IdeaProjects/AppiaTests/src/test/resources/exampleTest.xml"));
+			List<TestSuite> suites = ReadXmlFile.readTestSuite(new File("/home/applitopia/IdeaProjects/AppiaTests/src/test/resources/exampleTest.xml"));
+			List<TestSuite> finishedSuites = new ArrayList<>();
 			for (TestSuite suite: suites) {
 				System.out.println(suite);
-				suite.execute();
+				finishedSuites.add(suite.execute());
 			}
+			ResultsXmlGenerator generator =new ResultsXmlGenerator();
+			generator.generateResultsXmlFile(finishedSuites);
 		} catch (Exception e){
 			e.printStackTrace();
 		}

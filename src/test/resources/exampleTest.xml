@@ -5,8 +5,26 @@
             <methodParam type="java.lang.String">applitopia</methodParam>
             <methodParam type="java.lang.String">ma5t3rk3y</methodParam>
         </step>
+        <step>
+            <method>clickFiles</method>
+        </step>
+        <step>
+            <method>rightClickAdd</method>
+        </step>
+        <step>
+            <method>chooseTypeToAdd</method>
+            <methodParam type="java.lang.String">Directory</methodParam>
+        </step>
+        <step>
+            <method>nameAddedFile</method>
+            <methodParam type="java.lang.String">Testdir</methodParam>
+        </step>
+        <step>
+            <method>openDir</method>
+            <methodParam type="java.lang.String">TestDir</methodParam>
+        </step>
     </test>
-    <test>
+    <test name = "logout">
         <step>
             <method>appiaLogout</method>
         </step>

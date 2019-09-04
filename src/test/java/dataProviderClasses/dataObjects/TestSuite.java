@@ -32,7 +32,7 @@ public class TestSuite {
         this.tests = tests;
     }
 
-    public Result execute() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public TestSuite execute() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         for (TestModel test: tests) {
             try {
                 testsResults.add(test.execute());
@@ -43,7 +43,7 @@ public class TestSuite {
         if(result == null){
             result = new Result(name, true);
         }
-        return result;
+        return this;
     }
 
     @Override
